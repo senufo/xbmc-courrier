@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.mail"
+       name="Mail "
+       version="0.0.3- $Revision: 84 $ -svn"
+       provider-name="Senufo">
+  <requires>
+    <import addon="xbmc.python" version="2.0"/>
+  </requires>
+  <extension point="xbmc.python.script"
+             library="mail.py" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">mail Checker</summary>
+    <summary lang="fr">Courrier</summary> 
+    <description lang="en">View e-mails</description>
+    <description lang="fr">Voir son courrier</description>
+    <platform>all</platform>
+  </extension>
+</addon>
