@@ -4,7 +4,7 @@
 #
 # $Revision: 80 $
 # $Date: 2011-11-13 22:23:30 +0100 (dim. 13 nov. 2011) $
-# $Author: henri $
+# $Author: Senufo $
 #
 import os, re
 import sys
@@ -59,7 +59,7 @@ sys.path.append (__resource__)
 
 STATUS_LABEL   = 100
 EMAIL_LIST     = 120
-NX_MAIl        = 101
+NX_MAIL       = 101
 MSG_BODY	= 102
 SERVER1		= 1001
 SERVER2		= 1002
@@ -77,98 +77,14 @@ class MailWindow(xbmcgui.WindowXML):
     #variable pour position dans le msg
     self.position = 0
     
-    #Boite liste avec image pour focus et nofocus
-    self.listControl = xbmcgui.ControlList(200, 20, 958,150, 'font13', "80000000", dirHome + '/images/nofocus.png', dirHome + '/images/focus.png', "80000000")
-    #Boite pour le texte du message
-    self.msgbody = xbmcgui.ControlTextBox(200, 155, 978, 660, 'font13')
-  
- 
-    self.addControl(self.listControl)
-    self.addControl(self.msgbody)
-
-    #Ajout les differents boutons pour les serveurs mails
-    self.btnevent = []
-    #Position de depart du premier bouton
-    pos = 20 
-    for i in [1,2,3]:
-    	id = 'user' + str(i)
-	USER = Addon.getSetting( id )
-	id = 'name' + str(i)
-    	NOM =  Addon.getSetting( id )
-	id = 'server' + str(i)
-	SERVER = Addon.getSetting( id )
-	id = 'pass' + str(i)
-	PASSWORD =  Addon.getSetting( id )
-	id = 'port' + str(i)
-	PORT =  Addon.getSetting( id )
-	id = 'ssl' + str(i)
-	SSL = Addon.getSetting( id ) == "true"
-	id = 'type' + str(i)
-	TYPE = Addon.getSetting( id )
-	print "SERVER = %s, PORT = %s, USER = %s, password = %s, SSL = %s, TYPE = %s" % (SERVER,PORT,USER, PASSWORD, SSL,TYPE)
-	self.btnevent.append(xbmcgui.ControlButton(50, pos, 135, 30, NOM))
-	pos = pos + 40
-    for bouton in self.btnevent:    
-	self.addControl(bouton)
-    #Bouton Quitter
-    pos = pos + 40
-    self.vaButton = xbmcgui.ControlButton(50,pos , 135, 30, "Quitter")
-    self.vaButton.setLabel("Quitter", "font14", "60ffffff")
-    self.addControl(self.vaButton)
-    #Boite avec le nb de msg
-    pos = pos + 40
-    self.nb_msg = xbmcgui.ControlTextBox(50, pos , 135, 30, 'font13')
-    self.addControl(self.nb_msg)
-
-    #define control navigation
-    #Ajoute le controle de direction avec UP et Down
-    #Tourne en boucle sur les boutons des serveurs
-    nb = len(self.btnevent) - 1
-    up = nb 
-    down = 1
-    for bouton in self.btnevent:
-	print "up= %d, down = %s, nb = %d" % (up,down,nb)
-	bouton.controlUp(self.btnevent[up])
-	bouton.controlDown(self.btnevent[down])
-	down = down + 1
-	if (down > nb):
-		down = 0
-	up = up + 1
-	if (up >= nb):
-		up = 0
-	bouton.controlRight(self.listControl)
-	bouton.controlLeft(self.listControl)
- 
-    self.listControl.controlLeft(self.btnevent[0])
-    self.listControl.controlRight(self.btnevent[0])
-    self.setFocus(self.btnevent[0])
-    self.show()
-
-  def onInit( self ):
-    self.getControl( STATUS_LABEL ).setLabel( 'Serveur LIBERTUSRF ...' )
-    self.getControl( EMAIL_LIST ).reset()
-    for i in [1,2,3]:
-	id = 'name' + str(i)
-    	NOM =  Addon.getSetting( id )
-	Button_Name = 1000 + i 
-	self.getControl( Button_Name ).setLabel( NOM )
-
-
-#Recupere le texte dans un tag xml
-  def getText(self, nodelist):
-    rc = ""
-    for node in nodelist:
-       if node is not None:
-         if node.nodeType == node.TEXT_NODE:
-            rc = rc + node.data
-    return rc
-
 #Verifie les mails et affiche les sujets et expediteurs
 #Alias etant le nom du serveur POP ou IMAP
   def checkEmail(self, alias):
     print 'ALIAS = %s ' % alias
+    self.getControl( STATUS_LABEL ).setLabel( '%s ...' % alias )
+
     #Vide la liste des sudjet des messages
-    self.listControl.reset()
+    #self.listControl.reset()
     self.USER = ''
     self.NOM = ''
     self.SERVER = ''
@@ -233,9 +149,10 @@ class MailWindow(xbmcgui.WindowXML):
 
        print "You have", numEmails, "emails"
        #Affiche le nombre de msg
-       self.nb_msg.reset()
-       self.nb_msg.setText('%d msg(s)' % numEmails)
-       self.nb_msg.setVisible(True)
+       self.getControl( NX_MAIL ).setLabel( '%d msg(s)' % numEmails )
+#       self.nb_msg.reset()
+#       self.nb_msg.setText('%d msg(s)' % numEmails)
+#       self.nb_msg.setVisible(True)
        dialog.close()
        dialog.create("Inbox","You have " + str(numEmails) + " emails")
        ##Retrieve list of mails
@@ -292,6 +209,26 @@ class MailWindow(xbmcgui.WindowXML):
         dialog.close()
         #self.setFocus(self.cmButton)
      #else : print "Nom = %s "% NOM
+
+  def onInit( self ):
+    self.getControl( STATUS_LABEL ).setLabel( 'Serveur LIBERTYSURF ...' )
+    self.getControl( EMAIL_LIST ).reset()
+    for i in [1,2,3]:
+	id = 'name' + str(i)
+    	NOM =  Addon.getSetting( id )
+	Button_Name = 1000 + i 
+	self.getControl( Button_Name ).setLabel( NOM )
+#    checkEmail(self, Addon.getSetting( 'name1' ))
+
+#Recupere le texte dans un tag xml
+  def getText(self, nodelist):
+    rc = ""
+    for node in nodelist:
+       if node is not None:
+         if node.nodeType == node.TEXT_NODE:
+            rc = rc + node.data
+    return rc
+
 
   def onAction(self, action):
     #print "onAction"
@@ -353,7 +290,7 @@ class MailWindow(xbmcgui.WindowXML):
     if control == self.vaButton:
         self.close()
 
-  def onFocus(self, control):
+  #def onFocus(self, control):
     #print "onFocus"
     #if control == self.cmButton:
     #    self.checkEmail()
@@ -361,8 +298,8 @@ class MailWindow(xbmcgui.WindowXML):
         #self.fsButton.setLabel("Fullscreen", "font14", "ffffffff")
         #self.cmButton.controlDown(self.fsButton)
     #    self.processEmail(self.listControl.getSelectedPosition())
-    if control == self.vaButton:
-        self.close()
+    #if control == self.vaButton:
+    #    self.close()
    
   def onClick( self, controlId ):
     print "onClick controId = %d " % controlId
@@ -375,7 +312,7 @@ class MailWindow(xbmcgui.WindowXML):
   def processEmail(self, position):
     self.position = 0	
     #Efface le texte deja present 
-    self.msgbody.reset() 
+    #self.msgbody.reset() 
     print "Position = %d " % position
     position = position + 1
     
