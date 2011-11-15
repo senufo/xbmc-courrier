@@ -15,7 +15,7 @@
 	<description>Cadre du fond</description>
         <posx>0</posx>   <!-- position du cadre -->
         <posy>0</posy>
-	<width>1090</width> <!-- Dimension du cadre -->
+	<width>1220</width> <!-- Dimension du cadre -->
         <height>700</height>
         <texture border="40">default-panel.png</texture>
       </control>
@@ -26,7 +26,7 @@
             <posy>12</posy>
             <width>200</width>
             <height>82</height>
-            <texture>goog_mail_logo.png</texture>
+            <texture>icon.png</texture>
         </control>
              
 
@@ -56,7 +56,7 @@
         <align>right</align>
         <label>(0) New e-mails</label>
       </control>
-      
+     
       <control type="label">
         <description>textarea : Partie Update de Listitem (120) EMAIL_LIST, en bas</description>
         <posx>30</posx>
@@ -73,35 +73,35 @@
       <control type="image">
         <posx>20</posx>
         <posy>110</posy>
-        <width>1060</width>
+        <width>1200</width>
         <height>2</height>
         <texture>GMseparator.png</texture>
       </control>
       <control type="image">
         <posx>20</posx>
-        <posy>510</posy>
-        <width>1060</width>
+        <posy>610</posy>
+        <width>1200</width>
         <height>2</height>
         <texture>GMseparator.png</texture>
       </control>
       <control type="image">
         <posx>20</posx>
-        <posy>515</posy>
-        <width>1060</width>
+        <posy>615</posy>
+        <width>1200</width>
         <height>2</height>
         <texture>GMseparator.png</texture>
       </control>      
       <control type="image">
         <posx>20</posx>
-        <posy>565</posy>
-        <width>1060</width>
+        <posy>665</posy>
+        <width>1200</width>
         <height>2</height>
         <texture>GMseparator.png</texture>
       </control> 
       <control type="image">
         <posx>20</posx>
-        <posy>570</posy>
-        <width>1060</width>
+        <posy>670</posy>
+        <width>1200</width>
         <height>2</height>
         <texture>GMseparator.png</texture>
       </control>      
@@ -127,8 +127,8 @@
           <pulseonselect></pulseonselect>
 	  <!-- <onclick>XBMC.ActivateWindow(MyVideos)</onclick> -->
 	  <!-- <onfocus>-</onfocus> -->
-          <onup>2</onup>
-          <ondown>3</ondown>
+          <onup>1003</onup>
+          <ondown>1002</ondown>
           <onleft>1</onleft>
           <onright>1</onright>
       </control>
@@ -146,9 +146,8 @@
           <font>font14</font>
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
-          <onfocus>-</onfocus>
-          <onup>2</onup>
-          <ondown>3</ondown>
+          <onup>1001</onup>
+          <ondown>1003</ondown>
           <onleft>1</onleft>
           <onright>1</onright>
       </control>
@@ -166,19 +165,27 @@
           <font>font14</font>
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
-          <onfocus>-</onfocus>
-          <onup>2</onup>
-          <ondown>3</ondown>
+          <onup>1002</onup>
+          <ondown>1001</ondown>
           <onleft>1</onleft>
           <onright>1</onright>
        </control>
+       <!-- separation entre list et msgbody -->
+       <control type="image">
+        <posx>220</posx>
+        <posy>250</posy>
+        <width>1000</width>
+        <height>2</height>
+        <texture>GMseparator.png</texture>
+      </control>
+ 
        <!-- Texte du msg -->
        <control type="textbox" id="102">
         <description>textarea : Corps du mail</description>
-        <posx>320</posx>
-        <posy>300</posy>
+        <posx>220</posx>
+        <posy>250</posy>
         <width>1000</width>
-        <height>840</height>
+        <height>340</height>
         <font>font18</font>
         <textcolor>white</textcolor>
 	<!-- <aligny>center</aligny> -->
@@ -188,12 +195,13 @@
       
 
       <!-- ** Required ** Do not change <id> or <type> -->
+      <!-- Liste des messages                          -->
       <control type="list" id="120">
         <description>Liste de messages</description>
-        <posx>320</posx>
+        <posx>220</posx>
         <posy>126</posy>
         <width>1040</width>
-	<height>80</height>
+	<height>120</height>
 	<onleft>120</onleft>  <!-- définiton du controle -->
         <onright>120</onright>
         <onup>110</onup>
@@ -238,10 +246,10 @@
 
         </itemlayout>
         <focusedlayout height="38">
-          <control type="image">
+          <control type="image"> <!-- Image de item selectionne -->
             <posx>0</posx>
             <posy>0</posy>
-            <width>1040</width>
+            <width>900</width>
             <height>38</height>
             <texture border="10">default-list-focus.png</texture>
             <visible>Control.HasFocus(120)</visible>
@@ -276,14 +284,14 @@
         </focusedlayout>
       </control>
       <control type="group">
-        <posx>1055</posx>
+        <posx>1155</posx>
         <posy>126</posy>
         <control type="scrollbar" id="121">
           <description>scroll bar indicator for lists</description>
           <posx>0</posx>
           <posy>0</posy>
           <width>12</width>
-          <height>380</height>
+          <height>100</height>
           <texturesliderbackground border="6">default-scroll_back.png</texturesliderbackground>
           <texturesliderbar border="6">default-scroll_mid.png</texturesliderbar>
           <texturesliderbarfocus border="6">default-scroll_mid.png</texturesliderbarfocus>
