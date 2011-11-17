@@ -1,5 +1,5 @@
 <window>
-  <defaultcontrol>101</defaultcontrol>
+  <defaultcontrol>1001</defaultcontrol>
   <coordinates>
     <system>1</system>
     <posx>0</posx>
@@ -105,7 +105,7 @@
         <height>2</height>
         <texture>GMseparator.png</texture>
       </control>      
-      <!--- Bouton Serveurs MAIL -->
+      <!--- Boutons Serveurs MAIL -->
       <control type="button" id="1001">
           <description>Server button control</description>
           <posx>80</posx>
@@ -122,8 +122,8 @@
           <disabledcolor>80FFFFFF</disabledcolor>
           <onup>1003</onup>
           <ondown>1002</ondown>
-          <onleft>1</onleft>
-          <onright>1</onright>
+          <onleft>1004</onleft>
+          <onright>120</onright>
       </control>
       <control type="button" id="1002">
           <description>Server button control</description>
@@ -141,8 +141,8 @@
           <disabledcolor>80FFFFFF</disabledcolor>
           <onup>1001</onup>
           <ondown>1003</ondown>
-          <onleft>1</onleft>
-          <onright>1</onright>
+          <onleft>1004</onleft>
+          <onright>120</onright>
       </control>
       <control type="button" id="1003">
           <description>Server button control</description>
@@ -160,8 +160,8 @@
           <disabledcolor>80FFFFFF</disabledcolor>
           <onup>1002</onup>
           <ondown>1001</ondown>
-          <onleft>1</onleft>
-          <onright>1</onright>
+          <onleft>1004</onleft>
+          <onright>120</onright>
        </control>
        <!-- Bouton quitter -->
        <control type="button" id="1004">
@@ -178,10 +178,10 @@
           <font>font14</font>
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
-          <onup>1002</onup>
+          <onup>1003</onup>
           <ondown>1001</ondown>
-          <onleft>1</onleft>
-          <onright>1</onright>
+          <onleft>120</onleft>
+          <onright>120</onright>
        </control>
  
        <!-- separation entre list et msgbody -->
@@ -216,10 +216,10 @@
         <posy>126</posy>
         <width>1040</width>
 	<height>120</height>
-	<onleft>120</onleft>  <!-- définiton du controle -->
-        <onright>120</onright>
-        <onup>110</onup>
-        <ondown>110</ondown>
+	<onleft>1001</onleft>  <!-- définiton du controle -->
+        <onright>1004</onright>
+	<!-- <onup>1001</onup>
+	<ondown>1003</ondown> -->
         <viewtype label="535">list</viewtype>
         <pagecontrol>121</pagecontrol>
         <scrolltime>200</scrolltime>
