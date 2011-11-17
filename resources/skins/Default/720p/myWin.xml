@@ -60,7 +60,7 @@
       <control type="label">
         <description>textarea : Partie Update de Listitem (120) EMAIL_LIST, en bas</description>
         <posx>30</posx>
-        <posy>520</posy>
+        <posy>620</posy>
         <width>1050</width>
         <height>40</height>
         <font>font18</font>
@@ -120,13 +120,6 @@
           <font>font14</font>
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
-          <align></align>
-          <aligny></aligny>
-          <textoffsetx></textoffsetx>
-          <textoffsety></textoffsety>
-          <pulseonselect></pulseonselect>
-	  <!-- <onclick>XBMC.ActivateWindow(MyVideos)</onclick> -->
-	  <!-- <onfocus>-</onfocus> -->
           <onup>1003</onup>
           <ondown>1002</ondown>
           <onleft>1</onleft>
@@ -170,6 +163,27 @@
           <onleft>1</onleft>
           <onright>1</onright>
        </control>
+       <!-- Bouton quitter -->
+       <control type="button" id="1004">
+          <description>Server button control</description>
+          <posx>80</posx>
+          <posy>256</posy>
+          <width>135</width>
+          <height>30</height>
+          <visible>true</visible>
+          <colordiffuse>FFFFFFFF</colordiffuse>
+          <texturefocus>default-list-focus.png</texturefocus>
+          <texturenofocus>default-list-nofocus.png</texturenofocus>
+          <label>Quitter</label>
+          <font>font14</font>
+          <textcolor>FFFFFFFF</textcolor>
+          <disabledcolor>80FFFFFF</disabledcolor>
+          <onup>1002</onup>
+          <ondown>1001</ondown>
+          <onleft>1</onleft>
+          <onright>1</onright>
+       </control>
+ 
        <!-- separation entre list et msgbody -->
        <control type="image">
         <posx>220</posx>
@@ -232,7 +246,7 @@
           </control>
           
           <control type="label">
-            <posx>330</posx> <!-- position de 2eme element non selectionne -->
+            <posx>500</posx> <!-- position de 2eme element non selectionne -->
             <posy>0</posy>
             <width>680</width>
             <height>38</height>
@@ -249,7 +263,7 @@
           <control type="image"> <!-- Image de item selectionne -->
             <posx>0</posx>
             <posy>0</posy>
-            <width>900</width>
+            <width>490</width>
             <height>38</height>
             <texture border="10">default-list-focus.png</texture>
             <visible>Control.HasFocus(120)</visible>
@@ -258,9 +272,9 @@
           <control type="label">
             <posx>10</posx>
             <posy>0</posy>
-            <width>315</width>
+            <width>480</width>
             <height>38</height>
-            <font>font18</font>
+            <font>font19</font>
             <aligny>center</aligny>
             <textcolor>white</textcolor>
             <selectedcolor>green</selectedcolor>
@@ -269,7 +283,7 @@
           </control>
           
           <control type="label">
-            <posx>330</posx>
+            <posx>500</posx>
             <posy>0</posy>
             <width>680</width>
             <height>38</height>
@@ -279,7 +293,7 @@
             <selectedcolor>green</selectedcolor>
             <align>left</align>
             <info>ListItem.Property(summary)</info>
-          </control>
+	  </control>
 
         </focusedlayout>
       </control>

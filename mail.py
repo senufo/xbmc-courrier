@@ -1,8 +1,7 @@
 #Script pour consulter ses mails
 #Senufo, 2011 (c)
-#Version 0.0.2
+#Version 0.0.3
 #
-# $Revision: 80 $
 # $Date: 2011-11-13 22:23:30 +0100 (dim. 13 nov. 2011) $
 # $Author: Senufo $
 #
@@ -57,6 +56,7 @@ __resource__   = xbmc.translatePath( os.path.join( __cwd__, 'resources', 'lib' )
 
 sys.path.append (__resource__)
 
+#ID des boutons dans myWin.xml
 STATUS_LABEL   = 100
 EMAIL_LIST     = 120
 NX_MAIL       = 101
@@ -165,6 +165,7 @@ class MailWindow(xbmcgui.WindowXML):
        progressDialog = xbmcgui.DialogProgress()
        progressDialog.create('Message(s)', 'Get mail')
        i = 0
+       self.getControl( EMAIL_LIST ).reset()
        self.emails = []
        for item in items:
                 i = i + 1
@@ -190,12 +191,18 @@ class MailWindow(xbmcgui.WindowXML):
                       subject = ''.join(subj_fragments)
                 else:
                     subject = None
+		if msgobj['Date'] is not None:
+			date = msgobj['Date']
+			print "Date = %s" %  msgobj['Date']
+		else:
+			print "Pas de date"
                 #print "Sujet = %s " % subject
                 Sujet = subject
                 realname = parseaddr(msgobj.get('From'))[1]
                 #print "FROM = ", realname
-                listitem = xbmcgui.ListItem( label2=Sujet, label=realname) 
-                listitem.setProperty( "summary", 'summary' )    
+                listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
+                listitem.setProperty( "summary", realname )    
+                listitem.setProperty( "updated", date )    
 		self.getControl( EMAIL_LIST ).addItem( listitem )
        progressDialog.close()
        #Affiche le 1er mail de la liste
@@ -211,7 +218,7 @@ class MailWindow(xbmcgui.WindowXML):
      #else : print "Nom = %s "% NOM
 
   def onInit( self ):
-    self.getControl( STATUS_LABEL ).setLabel( 'Serveur LIBERTYSURF ...' )
+    #self.getControl( STATUS_LABEL ).setLabel( 'Serveur LIBERTYSURF ...' )
     self.getControl( EMAIL_LIST ).reset()
     for i in [1,2,3]:
 	id = 'name' + str(i)
@@ -305,9 +312,11 @@ class MailWindow(xbmcgui.WindowXML):
     print "onClick controId = %d " % controlId
     if (controlId == 120 ):
         self.processEmail(self.getControl( controlId ).getSelectedPosition())
-    else :
+    elif (controlId in [1001,1002,1003]):
 	label = self.getControl( controlId ).getLabel()
         self.checkEmail(label)
+    elif (controlId == 1004):
+    	self.close()
 
   def processEmail(self, position):
     self.position = 0	
