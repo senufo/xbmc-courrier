@@ -57,13 +57,17 @@ __resource__   = xbmc.translatePath( os.path.join( __cwd__, 'resources', 'lib' )
 sys.path.append (__resource__)
 
 #ID des boutons dans myWin.xml
-STATUS_LABEL   = 100
-EMAIL_LIST     = 120
-NX_MAIL       = 101
+STATUS_LABEL   	= 100
+NX_MAIL       	= 101
+MSG_BODY	= 102
+EMAIL_LIST     	= 120
+SCROLL_BAR	= 121
 MSG_BODY	= 102
 SERVER1		= 1001
 SERVER2		= 1002
 SERVER3		= 1003
+QUIT		= 1004
+
 class MailWindow(xbmcgui.WindowXML):
    
   def __init__(self, *args, **kwargs):
@@ -310,12 +314,12 @@ class MailWindow(xbmcgui.WindowXML):
    
   def onClick( self, controlId ):
     print "onClick controId = %d " % controlId
-    if (controlId == 120 ):
+    if (controlId == EMAIL_LIST ):
         self.processEmail(self.getControl( controlId ).getSelectedPosition())
-    elif (controlId in [1001,1002,1003]):
+    elif (controlId in [SERVER1,SERVER2,SERVER3]):
 	label = self.getControl( controlId ).getLabel()
         self.checkEmail(label)
-    elif (controlId == 1004):
+    elif (controlId == QUIT):
     	self.close()
 
   def processEmail(self, position):
