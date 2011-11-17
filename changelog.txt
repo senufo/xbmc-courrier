@@ -1,2 +1,8 @@
 0.0.1
 - initial commit
+0.1
+- use a skin xml file for mail window
+0.2
+- add quit button
+0.3
+- add scroll for message body

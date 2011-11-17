@@ -1,6 +1,2 @@
-Il faut adapter myWin.xml pour avoir 
-        une version lisible
-        un bouton quitter
-        des icones corrects
-        le nombre de messages total
-
+add notification if no mail
+add imap support
