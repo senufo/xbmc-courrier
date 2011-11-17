@@ -154,9 +154,6 @@ class MailWindow(xbmcgui.WindowXML):
        print "You have", numEmails, "emails"
        #Affiche le nombre de msg
        self.getControl( NX_MAIL ).setLabel( '%d msg(s)' % numEmails )
-#       self.nb_msg.reset()
-#       self.nb_msg.setText('%d msg(s)' % numEmails)
-#       self.nb_msg.setVisible(True)
        dialog.close()
        dialog.create("Inbox","You have " + str(numEmails) + " emails")
        ##Retrieve list of mails
@@ -169,6 +166,7 @@ class MailWindow(xbmcgui.WindowXML):
        progressDialog = xbmcgui.DialogProgress()
        progressDialog.create('Message(s)', 'Get mail')
        i = 0
+       #Mise a zero de la ListBox msg
        self.getControl( EMAIL_LIST ).reset()
        self.emails = []
        for item in items:
@@ -199,6 +197,7 @@ class MailWindow(xbmcgui.WindowXML):
 			date = msgobj['Date']
 			print "Date = %s" %  msgobj['Date']
 		else:
+			date = '--'
 			print "Pas de date"
                 #print "Sujet = %s " % subject
                 Sujet = subject
@@ -259,29 +258,30 @@ class MailWindow(xbmcgui.WindowXML):
     #code = action.getButtonCode()
     #print "code =", code
     #if action == ACTION_MOVE_DOWN:
-    if (action.getButtonCode() == 61572): #PageUp
+    #if (action.getButtonCode() == 61572): #PageUp
+    if action == ACTION_PAGE_UP: #PageUp
        #self.setFocus(self.msgbody)
        if (self.position > 0):
 	       self.position = self.position - 1
-       self.msgbody.scroll(self.position)
+       self.getControl( MSG_BODY ).scroll(self.position)
        print "Action Down==> %d" % self.position
     if (action.getButtonCode() == 61573): #PageDown
        #self.setFocus(self.msgbody)
        if (self.position <= self.nb_lignes):
 	       self.position = self.position + 1
-       self.msgbody.scroll(self.position)
+       self.getControl( MSG_BODY ).scroll(self.position)
        print "Action Up==> %d" % self.position
     if action == ACTION_VOLUME_UP: #PageUp
        #self.setFocus(self.msgbody)
        if (self.position > 0):
 	       self.position = self.position - 1
-       self.msgbody.scroll(self.position)
+       self.getControl( MSG_BODY ).scroll(self.position)
        print "Action Down==> %d" % self.position
     if action == ACTION_VOLUME_DOWN: #PageDown
        #self.setFocus(self.msgbody)
        if (self.position <= self.nb_lignes):
 	       self.position = self.position + 1
-       self.msgbody.scroll(self.position)
+       self.getControl( MSG_BODY ).scroll(self.position)
        print "Action Up==> %d" % self.position
     #print "Action ==> %s" % action
 
@@ -350,6 +350,13 @@ class MailWindow(xbmcgui.WindowXML):
     else:
          subject = None
     print "Sujet = %s " % subject
+    if msgobj['Date'] is not None:
+	date = msgobj['Date']
+	print "Date = %s" %  msgobj['Date']
+    else:
+	date = '--'
+	print "Pas de date"
+
     attachments = []
     body = None
     html = None
@@ -373,7 +380,7 @@ class MailWindow(xbmcgui.WindowXML):
      print "FROM = %s " % realname
     Sujet = subject 
     #print "Sujet = ", Sujet
-    description = 'De :' + realname + '\nSujet :' + Sujet + "\n"
+    description = 'De :' + realname + '\nSujet :' + Sujet + "\nDate :" + date
     description = description + '\n__________________________________________________________________\n\n'
     if (body):
        description = description + str(body)
@@ -383,10 +390,6 @@ class MailWindow(xbmcgui.WindowXML):
     self.nb_lignes = description.count("\n")
     self.getControl( MSG_BODY ).setVisible(True)
     self.getControl( MSG_BODY ).setText(description)
-    #self.msgbody.setVisible(True)
-    #self.msgbody.setText(description)
-    #self.setFocus(self.msgbody)
-
 
 
 
