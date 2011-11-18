@@ -76,15 +76,56 @@ class MailWindow(xbmcgui.WindowXML):
    
   def __init__(self, *args, **kwargs):
 
-    #Variablew du systeme
-    MAX_SIZE_MSG = 51200
-    SMART_HTML = True
     #ouvre le fichier des comptes mail
     dirHome = __cwd__
     #Creation des boutons et fenetres
     #variable pour position dans le msg
     self.position = 0
-    
+ 
+  def getImapMails(self, imap):
+    print "getImapMails"
+    #Mise a zero de la ListBox msg
+    self.getControl( EMAIL_LIST ).reset()
+    self.emails = []
+ 
+    typ, data = imap.search(None, 'UNSEEN')
+    for num in data[0].split():
+      typ, data = imap.fetch(num, '(RFC822)')
+      text = data[0][1].strip()
+      print "TEXT = %s " % text
+      #text = string.join(text,"\n")
+      myemail = email.message_from_string(text)
+      #print "MYEMAIL = %s " % myemail
+      p = EmailParser()
+      msgobj = p.parsestr(text)
+      print "ligne 99"
+      if msgobj['Subject'] is not None:
+            decodefrag = decode_header(msgobj['Subject'])
+            subj_fragments = []
+            for s , enc in decodefrag:
+                if enc:
+                    s = unicode(s , enc).encode('utf8','replace')
+                subj_fragments.append(s)
+            subject = ''.join(subj_fragments)
+      else:
+            subject = None
+      print "ligne 110"
+      if msgobj['Date'] is not None:
+            date = msgobj['Date']
+	    print "Date = %s" %  msgobj['Date']
+      else:
+            date = '--'
+	    print "Pas de date"
+      print "Sujet = %s " % subject
+      Sujet = subject
+      realname = parseaddr(msgobj.get('From'))[1]
+      #print "FROM = ", realname
+      listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
+      listitem.setProperty( "summary", realname )    
+      listitem.setProperty( "updated", date )    
+      self.getControl( EMAIL_LIST ).addItem( listitem )
+      imap.logout
+	   
 #Verifie les mails et affiche les sujets et expediteurs
 #Alias etant le nom du serveur POP ou IMAP
   def checkEmail(self, alias):
@@ -101,20 +142,13 @@ class MailWindow(xbmcgui.WindowXML):
     self.SSL = ''
     self.TYPE = ''
     for i in [1,2,3]:
-     id = 'user' + str(i)
-     USER = Addon.getSetting( id )
-     id = 'name' + str(i)
-     NOM =  Addon.getSetting( id )
-     id = 'server' + str(i)
-     SERVER = Addon.getSetting( id )
-     id = 'pass' + str(i)
-     PASSWORD =  Addon.getSetting( id )
-     id = 'port' + str(i)
-     PORT =  Addon.getSetting( id )
-     id = 'ssl' + str(i)
-     SSL = Addon.getSetting( id ) == "true"
-     id = 'type' + str(i)
-     TYPE = Addon.getSetting( id )
+     USER = Addon.getSetting( 'user%i' % i )
+     NOM =  Addon.getSetting( 'name%i' % i )
+     SERVER = Addon.getSetting( 'server%i' % i )
+     PASSWORD =  Addon.getSetting( 'pass%i' % i )
+     PORT =  Addon.getSetting( 'port%i' % i )
+     SSL = Addon.getSetting( 'ssl%i' % i ) == "true"
+     TYPE = Addon.getSetting( 'type%i' % i )
      print "SERVER = %s, PORT = %s, USER = %s, password = %s, SSL = %s, TYPE = %s" % (SERVER,PORT,USER, PASSWORD, SSL,TYPE)
      #On cherche le serveur selectionne
      if (alias == NOM):
@@ -153,6 +187,8 @@ class MailWindow(xbmcgui.WindowXML):
 	  #  numEmails = 1 
 	  numEmails = len(imap.search(None, 'UnSeen')[1][0].split()) 
 	  print "IMAP numEmails = %d " % numEmails
+
+	  self.getImapMails(imap)
 	  return
 
        print "You have", numEmails, "emails"
@@ -160,9 +196,8 @@ class MailWindow(xbmcgui.WindowXML):
        self.getControl( NX_MAIL ).setLabel( '%d msg(s)' % numEmails )
        dialog.close()
        if numEmails == 0:
-	    dialog.create("Courriels","Pas de courriels")
-            time.sleep(5)
-	    dialog.close()
+            dialogOK = xbmcgui.Dialog()
+	    dialogOK.ok("%s" % NOM ,"Pas de courriels")
        else:
             dialog.create("Inbox","You have " + str(numEmails) + " emails")
             ##Retrieve list of mails
@@ -221,14 +256,17 @@ class MailWindow(xbmcgui.WindowXML):
             self.processEmail(0)
             self.getControl( EMAIL_LIST ).selectItem(0)
 
-    except:
+#    except:
+    except Exception, e:
+	print "=============>"
+        print str( e )
         dialog.close()
 	dialog.create("Inbox","Problem connecting to server : %s" % self.SERVER)
         time.sleep(5)
         dialog.close()
         #self.setFocus(self.cmButton)
      #else : print "Nom = %s "% NOM
-
+  
   def onInit( self ):
     #self.getControl( STATUS_LABEL ).setLabel( 'Serveur LIBERTYSURF ...' )
     self.getControl( EMAIL_LIST ).reset()
@@ -237,7 +275,7 @@ class MailWindow(xbmcgui.WindowXML):
     	NOM =  Addon.getSetting( id )
 	Button_Name = 1000 + i 
 	self.getControl( Button_Name ).setLabel( NOM )
-    self.checkEmail(Addon.getSetting( 'name1' ))
+    #self.checkEmail(Addon.getSetting( 'name1' ))
 
 #Recupere le texte dans un tag xml
   def getText(self, nodelist):
@@ -250,7 +288,7 @@ class MailWindow(xbmcgui.WindowXML):
 
 
   def onAction(self, action):
-    print "ID Action %d" % action.getId()
+    #print "ID Action %d" % action.getId()
    #print "Code Action %d" % action.getButtonCode()
     if action == ACTION_PREVIOUS_MENU:
        self.close()
