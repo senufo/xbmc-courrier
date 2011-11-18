@@ -38,8 +38,12 @@ ACTION_MOVE_UP         =   3
 ACTION_MOVE_DOWN       =   4
 ACTION_PAGE_UP         =   5
 ACTION_PAGE_DOWN       =   6
+ACTION_NUMBER1         =   59
+ACTION_NUMBER2         =   60
 ACTION_VOLUME_UP       =   88
 ACTION_VOLUME_DOWN     =   89
+ACTION_REWIND          =   77
+ACTION_FASTFORWARD     =   78
 
 __author__     = "Senufo"
 __scriptid__   = "script.mail"
@@ -233,7 +237,7 @@ class MailWindow(xbmcgui.WindowXML):
     	NOM =  Addon.getSetting( id )
 	Button_Name = 1000 + i 
 	self.getControl( Button_Name ).setLabel( NOM )
-    #checkEmail(self, Addon.getSetting( 'name1' ))
+    self.checkEmail(Addon.getSetting( 'name1' ))
 
 #Recupere le texte dans un tag xml
   def getText(self, nodelist):
@@ -247,9 +251,7 @@ class MailWindow(xbmcgui.WindowXML):
 
   def onAction(self, action):
     print "ID Action %d" % action.getId()
-    NUMBER1 = 59
-    NUMBER2 = 60
-    #print "Code Action %d" % action.getButtonCode()
+   #print "Code Action %d" % action.getButtonCode()
     if action == ACTION_PREVIOUS_MENU:
        self.close()
     if action == ACTION_MOVE_UP:
@@ -262,22 +264,15 @@ class MailWindow(xbmcgui.WindowXML):
        print "ACTION _MOVE_DOWN"
        #if (controlId == EMAIL_LIST ):
        self.processEmail(self.getControl( EMAIL_LIST ).getSelectedPosition())
-
-    #if action == ACTION_PAGE_UP: #PageUp
-    if action == NUMBER1: #PageUp
-       #self.setFocus(self.getControl( SERVER1  ))
+    if action == ACTION_FASTFORWARD: #PageUp
        if (self.position > 0):
-	       self.position = self.position - 1
+             self.position = self.position - 1
        self.getControl( MSG_BODY ).scroll(self.position)
-       print "Action Down==> %d" % self.position
-    if action == NUMBER2: #PageUp
-    #if action == ACTION_PAGE_DOWN: #PageDown
-       #self.setFocus(self.getControl( SERVER1 ))
+    if (action == ACTION_REWIND): #PageUp
        if (self.position <= self.nb_lignes):
-	       self.position = self.position + 1
+             self.position = self.position + 1
        self.getControl( MSG_BODY ).scroll(self.position)
-       print "Action Up==> %d" % self.position
-
+																       
 #  def onControl(self, control):
     #print "onCOntrol %s " % control
     #Identifie le bouton selectione
@@ -377,6 +372,7 @@ class MailWindow(xbmcgui.WindowXML):
     #print "Sujet = ", Sujet
     description = 'De :' + realname + '\nSujet :' + Sujet + "\nDate :" + date
     description = description + '\n__________________________________________________________________\n\n'
+    description = ' '
     if (body):
        description = description + str(body)
     else:
