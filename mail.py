@@ -265,7 +265,8 @@ class MailWindow(xbmcgui.WindowXML):
 	       self.position = self.position - 1
        self.getControl( MSG_BODY ).scroll(self.position)
        print "Action Down==> %d" % self.position
-    if (action.getButtonCode() == 61573): #PageDown
+    #if (action.getButtonCode() == 61573): #PageDown
+    if action == ACTION_PAGE_DOWN: #PageDown
        #self.setFocus(self.msgbody)
        if (self.position <= self.nb_lignes):
 	       self.position = self.position + 1
