@@ -204,7 +204,7 @@
         <textcolor>white</textcolor>
 	<!-- <aligny>center</aligny> -->
         <align>left</align>
-        <label>Corps du message</label>
+        <label></label>
       </control>
       
 
