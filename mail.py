@@ -155,21 +155,26 @@ class MailWindow(xbmcgui.WindowXML):
        #Affiche le nombre de msg
        self.getControl( NX_MAIL ).setLabel( '%d msg(s)' % numEmails )
        dialog.close()
-       dialog.create("Inbox","You have " + str(numEmails) + " emails")
-       ##Retrieve list of mails
-       resp, items, octets = mail.list()
-       print "resp = % s" % resp
-       print "items ", items
-       dialog.close()
-       #result = resp.find('+OK')
-       #On recupere tous les messages pour les afficher
-       progressDialog = xbmcgui.DialogProgress()
-       progressDialog.create('Message(s)', 'Get mail')
-       i = 0
-       #Mise a zero de la ListBox msg
-       self.getControl( EMAIL_LIST ).reset()
-       self.emails = []
-       for item in items:
+       if numEmails == 0:
+	    dialog.create("Courriels","Pas de courriels")
+            time.sleep(5)
+	    dialog.close()
+       else:
+            dialog.create("Inbox","You have " + str(numEmails) + " emails")
+            ##Retrieve list of mails
+            resp, items, octets = mail.list()
+            print "resp = % s" % resp
+            print "items ", items
+            dialog.close()
+            #result = resp.find('+OK')
+            #On recupere tous les messages pour les afficher
+            progressDialog = xbmcgui.DialogProgress()
+            progressDialog.create('Message(s)', 'Get mail')
+            i = 0
+            #Mise a zero de la ListBox msg
+            self.getControl( EMAIL_LIST ).reset()
+            self.emails = []
+            for item in items:
                 i = i + 1
                 #print "item %s" % item
 	        id, size = string.split(item)
@@ -207,14 +212,14 @@ class MailWindow(xbmcgui.WindowXML):
                 listitem.setProperty( "summary", realname )    
                 listitem.setProperty( "updated", date )    
 		self.getControl( EMAIL_LIST ).addItem( listitem )
-       progressDialog.close()
-       #Affiche le 1er mail de la liste
-       self.processEmail(0)
-       self.getControl( EMAIL_LIST ).selectItem(0)
+            progressDialog.close()
+            #Affiche le 1er mail de la liste
+            self.processEmail(0)
+            self.getControl( EMAIL_LIST ).selectItem(0)
 
     except:
         dialog.close()
-        dialog.create("Inbox","Problem connecting to server, 244")
+	dialog.create("Inbox","Problem connecting to server : %s" % self.SERVER)
         time.sleep(5)
         dialog.close()
         #self.setFocus(self.cmButton)
@@ -228,7 +233,7 @@ class MailWindow(xbmcgui.WindowXML):
     	NOM =  Addon.getSetting( id )
 	Button_Name = 1000 + i 
 	self.getControl( Button_Name ).setLabel( NOM )
-#    checkEmail(self, Addon.getSetting( 'name1' ))
+    #checkEmail(self, Addon.getSetting( 'name1' ))
 
 #Recupere le texte dans un tag xml
   def getText(self, nodelist):
@@ -241,66 +246,53 @@ class MailWindow(xbmcgui.WindowXML):
 
 
   def onAction(self, action):
-    #print "onAction"
-    #if action == 10:
-    #   if self.fullscreen:
-    #       self.undoFullscreen()
-    #   elif self.showingimage:
-    #       self.removeControl(self.img)
-    #       self.showingimage = False
-    #   else:
-    #       self.close()
+    print "ID Action %d" % action.getId()
+    NUMBER1 = 59
+    NUMBER2 = 60
+    #print "Code Action %d" % action.getButtonCode()
     if action == ACTION_PREVIOUS_MENU:
        self.close()
-    #if action == ACTION_SELECT_ITEM:
-    #  self.message()
-    #self.textbox.scroll(10)
-    #code = action.getButtonCode()
-    #print "code =", code
-    #if action == ACTION_MOVE_DOWN:
-    #if (action.getButtonCode() == 61572): #PageUp
-    if action == ACTION_PAGE_UP: #PageUp
-       #self.setFocus(self.msgbody)
-       if (self.position > 0):
-	       self.position = self.position - 1
-       self.getControl( MSG_BODY ).scroll(self.position)
-       print "Action Down==> %d" % self.position
-    #if (action.getButtonCode() == 61573): #PageDown
-    if action == ACTION_PAGE_DOWN: #PageDown
-       #self.setFocus(self.msgbody)
-       if (self.position <= self.nb_lignes):
-	       self.position = self.position + 1
-       self.getControl( MSG_BODY ).scroll(self.position)
-       print "Action Up==> %d" % self.position
-    if action == ACTION_VOLUME_UP: #PageUp
-       #self.setFocus(self.msgbody)
-       if (self.position > 0):
-	       self.position = self.position - 1
-       self.getControl( MSG_BODY ).scroll(self.position)
-       print "Action Down==> %d" % self.position
-    if action == ACTION_VOLUME_DOWN: #PageDown
-       #self.setFocus(self.msgbody)
-       if (self.position <= self.nb_lignes):
-	       self.position = self.position + 1
-       self.getControl( MSG_BODY ).scroll(self.position)
-       print "Action Up==> %d" % self.position
-    #print "Action ==> %s" % action
+    if action == ACTION_MOVE_UP:
+       controlId = action.getId()
+       print "ACTION _MOVE_UP"
+       #if (controlId == EMAIL_LIST ):
+       self.processEmail(self.getControl( EMAIL_LIST ).getSelectedPosition())
+    if action == ACTION_MOVE_DOWN:
+       controlId = action.getButtonCode()
+       print "ACTION _MOVE_DOWN"
+       #if (controlId == EMAIL_LIST ):
+       self.processEmail(self.getControl( EMAIL_LIST ).getSelectedPosition())
 
-  def onControl(self, control):
+    #if action == ACTION_PAGE_UP: #PageUp
+    if action == NUMBER1: #PageUp
+       #self.setFocus(self.getControl( SERVER1  ))
+       if (self.position > 0):
+	       self.position = self.position - 1
+       self.getControl( MSG_BODY ).scroll(self.position)
+       print "Action Down==> %d" % self.position
+    if action == NUMBER2: #PageUp
+    #if action == ACTION_PAGE_DOWN: #PageDown
+       #self.setFocus(self.getControl( SERVER1 ))
+       if (self.position <= self.nb_lignes):
+	       self.position = self.position + 1
+       self.getControl( MSG_BODY ).scroll(self.position)
+       print "Action Up==> %d" % self.position
+
+#  def onControl(self, control):
     #print "onCOntrol %s " % control
     #Identifie le bouton selectione
-    for bouton in self.btnevent:    
-	label = bouton.getLabel()
-	print "Label = %s " % label
-	if control == bouton: 
-		print "%s select" % label
-		self.checkEmail(label)
-    if control == self.listControl:
-        self.processEmail(self.listControl.getSelectedPosition())
-    elif control == self.msgbody:
-	    print "MSGBODY"
-    if control == self.vaButton:
-        self.close()
+    #for bouton in self.btnevent:    
+#	label = bouton.getLabel()
+#	print "Label = %s " % label
+#	if control == bouton: 
+#		print "%s select" % label
+#		self.checkEmail(label)
+ #   if control == self.listControl:
+  #      self.processEmail(self.listControl.getSelectedPosition())
+   # elif control == self.msgbody:
+#	    print "MSGBODY"
+ #   if control == self.vaButton:
+  #      self.close()
 
   #def onFocus(self, control):
     #print "onFocus"
@@ -316,6 +308,8 @@ class MailWindow(xbmcgui.WindowXML):
   def onClick( self, controlId ):
     print "onClick controId = %d " % controlId
     if (controlId == EMAIL_LIST ):
+	#dialog = xbmcgui.Dialog()
+	#ok = dialog.ok('Sujet', 'Here the messages')
         self.processEmail(self.getControl( controlId ).getSelectedPosition())
     elif (controlId in [SERVER1,SERVER2,SERVER3]):
 	label = self.getControl( controlId ).getLabel()
