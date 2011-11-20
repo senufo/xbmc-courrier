@@ -390,88 +390,20 @@ class MailWindow(xbmcgui.WindowXML):
    
   def onClick( self, controlId ):
     print "onClick controId = %d " % controlId
-    if (controlId == EMAIL_LIST ):
+    #if (controlId == EMAIL_LIST ):
 	#dialog = xbmcgui.Dialog()
 	#ok = dialog.ok('Sujet', 'Here the messages')
-        self.processEmail(self.getControl( controlId ).getSelectedPosition())
-    elif (controlId in [SERVER1,SERVER2,SERVER3]):
+        #self.processEmail(self.getControl( controlId ).getSelectedPosition())
+    #elif (controlId in [SERVER1,SERVER2,SERVER3]):
+    if (controlId in [SERVER1,SERVER2,SERVER3]):
 	label = self.getControl( controlId ).getLabel()
         self.checkEmail(label)
     elif (controlId == QUIT):
     	self.close()
 
-  def processEmail(self, position):
-    self.position = 0	
-    #Efface le texte deja present 
-    #self.msgbody.reset() 
-    print "Position = %d " % position
-    position = position + 1
-    
-    mail = poplib.POP3(str(self.SERVER))
-    mail.user(str(self.USER))
-    mail.pass_(str(self.PASSWORD))
-       
-    #resp, text, octets = mail.top(position,500)
-    resp, text, octets = mail.retr(position)
-    text = string.join(text, "\n")
-    myemail = email.message_from_string(text)
-    p = EmailParser()
-    msgobj = p.parsestr(text)
-    if msgobj['Subject'] is not None:
-        decodefrag = decode_header(msgobj['Subject'])
-        subj_fragments = []
-        for s , enc in decodefrag:
-            if enc:
-               s = unicode(s , enc).encode('utf8','replace')
-            subj_fragments.append(s)
-        subject = ''.join(subj_fragments)
-    else:
-         subject = None
-    print "Sujet = %s " % subject
-    if msgobj['Date'] is not None:
-	date = msgobj['Date']
-	print "Date = %s" %  msgobj['Date']
-    else:
-	date = '--'
-	print "Pas de date"
-
-    attachments = []
-    body = None
-    html = None
-    for part in msgobj.walk():
-     #content_disposition = part.get("Content-Disposition", None)        
-     #print "content-disp =", content_disposition
-     if part.get_content_type() == "text/plain":
-           if body is None:
-               body = ""
-           body += unicode(
-                part.get_payload(decode=True),
-                part.get_content_charset(),
-                'replace'
-                ).encode('utf8','replace')
-     elif part.get_content_type() == "text/html":
-           if html is None:
-               html = ""
-           html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('utf8','replace')
-     
-     realname = parseaddr(msgobj.get('From'))[1]
-     print "FROM = %s " % realname
-    Sujet = subject 
-    #print "Sujet = ", Sujet
-    description = 'De :' + realname + '\nSujet :' + Sujet + "\nDate :" + date
-    description = description + '\n__________________________________________________________________\n\n'
-    description = ' '
-    if (body):
-       description = description + str(body)
-    else:
-       description = description + str(html)
-    description = description + str(body)
-    self.nb_lignes = description.count("\n")
-    self.getControl( MSG_BODY ).setVisible(True)
-    self.getControl( MSG_BODY ).setText(description)
-
-
-
+#
+#
+#
 mydisplay = MailWindow( "myWin.xml" , __cwd__, "Default")
 mydisplay .doModal()
 del mydisplay
