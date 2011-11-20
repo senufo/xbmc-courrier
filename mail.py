@@ -174,8 +174,8 @@ class MailWindow(xbmcgui.WindowXML):
             dialog.create("Inbox","You have " + str(numEmails) + " emails")
             ##Retrieve list of mails
             resp, items, octets = mail.list()
-            print "resp = % s" % resp
-            print "items ", items
+#            print "resp = % s" % resp
+#            print "items ", items
             dialog.close()
             #result = resp.find('+OK')
             #On recupere tous les messages pour les afficher
@@ -211,10 +211,10 @@ class MailWindow(xbmcgui.WindowXML):
                     subject = None
 		if msgobj['Date'] is not None:
 			date = msgobj['Date']
-			print "Date = %s" %  msgobj['Date']
+#			print "Date = %s" %  msgobj['Date']
 		else:
 			date = '--'
-			print "Pas de date"
+#			print "Pas de date"
                 #print "Sujet = %s " % subject
                 Sujet = subject
                 realname = parseaddr(msgobj.get('From'))[1]
@@ -229,7 +229,7 @@ class MailWindow(xbmcgui.WindowXML):
                    if part.get_content_type() == "text/plain":
                        if body is None:
                             body = ""
-		       print "ligne 232"
+#		       print "ligne 232"
 		       try :
                         body += unicode(
                             part.get_payload(decode=True),
@@ -238,11 +238,13 @@ class MailWindow(xbmcgui.WindowXML):
                             ).encode('utf8','replace')
 		       except Exception ,e:
 			       print str(e)
+			       print "####> %s " % part.get_payload()
+			       print "---------------------------------------------------"
 			       body += "Erreur unicode"
                    elif part.get_content_type() == "text/html":
                       if html is None:
                           html = ""
-		      print "ligne 241"
+#		      print "ligne 241"
 		      try :
                             html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('utf8','replace')
                       except Exception ,e:
@@ -253,14 +255,14 @@ class MailWindow(xbmcgui.WindowXML):
                    print "FROM = %s " % realname
                 Sujet = subject 
                 #print "Sujet = ", Sujet
-                description = 'De :' + realname + '\nSujet :' + Sujet + "\nDate :" + date
-                description = description + '\n__________________________________________________________________\n\n'
+                #description = 'De :' + realname + '\nSujet :' + Sujet + "\nDate :" + date
+                #description = description + '\n__________________________________________________________________\n\n'
                 description = ' '
                 if (body):
-                     description = description + str(body)
+                     description = str(body)
                 else:
-                     description = description + str(html)
-                description = description + str(body)
+                     description = str(html)
+                #description = description + str(body)
                 self.nb_lignes = description.count("\n")
  
                 listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
