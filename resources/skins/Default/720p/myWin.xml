@@ -204,7 +204,7 @@
         <textcolor>white</textcolor>
 	<!-- <aligny>center</aligny> -->
         <align>left</align>
-        <label></label>
+        <label>$INFO[Container(120).ListItem.Property(message)]</label>
       </control>
       
 

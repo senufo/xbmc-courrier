@@ -81,50 +81,20 @@ class MailWindow(xbmcgui.WindowXML):
     #Creation des boutons et fenetres
     #variable pour position dans le msg
     self.position = 0
- 
-  def getImapMails(self, imap):
-    print "getImapMails"
-    #Mise a zero de la ListBox msg
+
+  def onInit( self ):
+    print "Branch  EXPERIMENTAL"
+
+    #self.getControl( STATUS_LABEL ).setLabel( 'Serveur LIBERTYSURF ...' )
     self.getControl( EMAIL_LIST ).reset()
-    self.emails = []
- 
-    typ, data = imap.search(None, 'UNSEEN')
-    for num in data[0].split():
-      typ, data = imap.fetch(num, '(RFC822)')
-      text = data[0][1].strip()
-      print "TEXT = %s " % text
-      #text = string.join(text,"\n")
-      myemail = email.message_from_string(text)
-      #print "MYEMAIL = %s " % myemail
-      p = EmailParser()
-      msgobj = p.parsestr(text)
-      print "ligne 99"
-      if msgobj['Subject'] is not None:
-            decodefrag = decode_header(msgobj['Subject'])
-            subj_fragments = []
-            for s , enc in decodefrag:
-                if enc:
-                    s = unicode(s , enc).encode('utf8','replace')
-                subj_fragments.append(s)
-            subject = ''.join(subj_fragments)
-      else:
-            subject = None
-      print "ligne 110"
-      if msgobj['Date'] is not None:
-            date = msgobj['Date']
-	    print "Date = %s" %  msgobj['Date']
-      else:
-            date = '--'
-	    print "Pas de date"
-      print "Sujet = %s " % subject
-      Sujet = subject
-      realname = parseaddr(msgobj.get('From'))[1]
-      #print "FROM = ", realname
-      listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
-      listitem.setProperty( "summary", realname )    
-      listitem.setProperty( "updated", date )    
-      self.getControl( EMAIL_LIST ).addItem( listitem )
-      imap.logout
+    for i in [1,2,3]:
+	id = 'name' + str(i)
+    	NOM =  Addon.getSetting( id )
+	Button_Name = 1000 + i 
+	self.getControl( Button_Name ).setLabel( NOM )
+    #self.checkEmail(Addon.getSetting( 'name1' ))
+
+
 	   
 #Verifie les mails et affiche les sujets et expediteurs
 #Alias etant le nom du serveur POP ou IMAP
@@ -141,6 +111,7 @@ class MailWindow(xbmcgui.WindowXML):
     self.PORT = ''
     self.SSL = ''
     self.TYPE = ''
+    self.FOLDER = ''
     for i in [1,2,3]:
      USER = Addon.getSetting( 'user%i' % i )
      NOM =  Addon.getSetting( 'name%i' % i )
@@ -149,6 +120,7 @@ class MailWindow(xbmcgui.WindowXML):
      PORT =  Addon.getSetting( 'port%i' % i )
      SSL = Addon.getSetting( 'ssl%i' % i ) == "true"
      TYPE = Addon.getSetting( 'type%i' % i )
+     FOLDER = Addon.getSetting( 'folder%i' % i )
      print "SERVER = %s, PORT = %s, USER = %s, password = %s, SSL = %s, TYPE = %s" % (SERVER,PORT,USER, PASSWORD, SSL,TYPE)
      #On cherche le serveur selectionne
      if (alias == NOM):
@@ -175,21 +147,21 @@ class MailWindow(xbmcgui.WindowXML):
           mail.pass_(str(self.PASSWORD))
           numEmails = mail.stat()[0]
 	  print "194"
-       if '1' in self.TYPE: #IMAP
-          if self.SSL:
-	       imap = imaplib.IMAP4_SSL(self.SERVER, int(self.PORT))
-	  else:
-	       imap = imaplib.IMAP4(self.SERVER, int(self.PORT))
-	  imap.login(self.USER, self.PASSWORD)
-          id = 'folder' + str(i)
-	  FOLDER = Addon.getSetting( id )
-	  imap.select(FOLDER)
-	  #  numEmails = 1 
-	  numEmails = len(imap.search(None, 'UnSeen')[1][0].split()) 
-	  print "IMAP numEmails = %d " % numEmails
-
-	  self.getImapMails(imap)
-	  return
+#       #if '1' in self.TYPE: #IMAP
+#       #   if self.SSL:
+#	       imap = imaplib.IMAP4_SSL(self.SERVER, int(self.PORT))
+#	  else:
+#	       imap = imaplib.IMAP4(self.SERVER, int(self.PORT))
+#	  imap.login(self.USER, self.PASSWORD)
+#          id = 'folder' + str(i)
+#	  FOLDER = Addon.getSetting( id )
+#	  imap.select(FOLDER)
+#	  #  numEmails = 1 
+#	  numEmails = len(imap.search(None, 'UnSeen')[1][0].split()) 
+#	  print "IMAP numEmails = %d " % numEmails
+#
+#	  self.getImapMails(imap)
+#	  return
 
        print "You have", numEmails, "emails"
        #Affiche le nombre de msg
@@ -247,13 +219,58 @@ class MailWindow(xbmcgui.WindowXML):
                 Sujet = subject
                 realname = parseaddr(msgobj.get('From'))[1]
                 #print "FROM = ", realname
+
+                attachments = []
+                body = None
+                html = None
+                for part in msgobj.walk():
+                #content_disposition = part.get("Content-Disposition", None)        
+                #print "content-disp =", content_disposition
+                   if part.get_content_type() == "text/plain":
+                       if body is None:
+                            body = ""
+		       print "ligne 232"
+		       try :
+                        body += unicode(
+                            part.get_payload(decode=True),
+                            part.get_content_charset(),
+                            'replace'
+                            ).encode('utf8','replace')
+		       except Exception ,e:
+			       print str(e)
+			       body += "Erreur unicode"
+                   elif part.get_content_type() == "text/html":
+                      if html is None:
+                          html = ""
+		      print "ligne 241"
+		      try :
+                            html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('utf8','replace')
+                      except Exception ,e:
+			    print str(e)
+			    body += "Erreur unicode html"
+
+                   realname = parseaddr(msgobj.get('From'))[1]
+                   print "FROM = %s " % realname
+                Sujet = subject 
+                #print "Sujet = ", Sujet
+                description = 'De :' + realname + '\nSujet :' + Sujet + "\nDate :" + date
+                description = description + '\n__________________________________________________________________\n\n'
+                description = ' '
+                if (body):
+                     description = description + str(body)
+                else:
+                     description = description + str(html)
+                description = description + str(body)
+                self.nb_lignes = description.count("\n")
+ 
                 listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
                 listitem.setProperty( "summary", realname )    
-                listitem.setProperty( "updated", date )    
+                listitem.setProperty( "updated", date )   
+		listitem.setProperty( "message", description )
 		self.getControl( EMAIL_LIST ).addItem( listitem )
             progressDialog.close()
             #Affiche le 1er mail de la liste
-            self.processEmail(0)
+            #self.processEmail(0)
             self.getControl( EMAIL_LIST ).selectItem(0)
 
 #    except:
@@ -266,17 +283,50 @@ class MailWindow(xbmcgui.WindowXML):
         dialog.close()
         #self.setFocus(self.cmButton)
      #else : print "Nom = %s "% NOM
-  
-  def onInit( self ):
-    #self.getControl( STATUS_LABEL ).setLabel( 'Serveur LIBERTYSURF ...' )
+  def getImapMails(self, imap):
+    print "getImapMails"
+    #Mise a zero de la ListBox msg
     self.getControl( EMAIL_LIST ).reset()
-    for i in [1,2,3]:
-	id = 'name' + str(i)
-    	NOM =  Addon.getSetting( id )
-	Button_Name = 1000 + i 
-	self.getControl( Button_Name ).setLabel( NOM )
-    #self.checkEmail(Addon.getSetting( 'name1' ))
-
+    self.emails = []
+ 
+    typ, data = imap.search(None, 'UNSEEN')
+    for num in data[0].split():
+      typ, data = imap.fetch(num, '(RFC822)')
+      text = data[0][1].strip()
+      print "TEXT = %s " % text
+      #text = string.join(text,"\n")
+      myemail = email.message_from_string(text)
+      #print "MYEMAIL = %s " % myemail
+      p = EmailParser()
+      msgobj = p.parsestr(text)
+      print "ligne 99"
+      if msgobj['Subject'] is not None:
+            decodefrag = decode_header(msgobj['Subject'])
+            subj_fragments = []
+            for s , enc in decodefrag:
+                if enc:
+                    s = unicode(s , enc).encode('utf8','replace')
+                subj_fragments.append(s)
+            subject = ''.join(subj_fragments)
+      else:
+            subject = None
+      print "ligne 110"
+      if msgobj['Date'] is not None:
+            date = msgobj['Date']
+	    print "Date = %s" %  msgobj['Date']
+      else:
+            date = '--'
+	    print "Pas de date"
+      print "Sujet = %s " % subject
+      Sujet = subject
+      realname = parseaddr(msgobj.get('From'))[1]
+      #print "FROM = ", realname
+      listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
+      listitem.setProperty( "summary", realname )    
+      listitem.setProperty( "updated", date )    
+      self.getControl( EMAIL_LIST ).addItem( listitem )
+      imap.logout
+ 
 #Recupere le texte dans un tag xml
   def getText(self, nodelist):
     rc = ""
@@ -296,12 +346,12 @@ class MailWindow(xbmcgui.WindowXML):
        controlId = action.getId()
        print "ACTION _MOVE_UP"
        #if (controlId == EMAIL_LIST ):
-       self.processEmail(self.getControl( EMAIL_LIST ).getSelectedPosition())
+       #self.processEmail(self.getControl( EMAIL_LIST ).getSelectedPosition())
     if action == ACTION_MOVE_DOWN:
        controlId = action.getButtonCode()
        print "ACTION _MOVE_DOWN"
        #if (controlId == EMAIL_LIST ):
-       self.processEmail(self.getControl( EMAIL_LIST ).getSelectedPosition())
+       #self.processEmail(self.getControl( EMAIL_LIST ).getSelectedPosition())
     if action == ACTION_FASTFORWARD: #PageUp
        if (self.position > 0):
              self.position = self.position - 1
