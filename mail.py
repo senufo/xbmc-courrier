@@ -12,6 +12,20 @@ from time import gmtime, strftime
 import poplib, imaplib
 import string, random
 import StringIO, rfc822
+
+#MOdule pour html2text
+
+import htmlentitydefs
+import urlparse
+import HTMLParser
+import urllib
+import optparse, codecs, types
+from textwrap import wrap
+
+from BeautifulSoup import BeautifulSoup, SoupStrainer, Comment
+
+
+
 import email
 from email.Parser import Parser as EmailParser
 from email.utils import parseaddr
@@ -58,8 +72,10 @@ __language__   = __addon__.getLocalizedString
 __profile__    = xbmc.translatePath( __addon__.getAddonInfo('profile') )
 __resource__   = xbmc.translatePath( os.path.join( __cwd__, 'resources', 'lib' ) )
 
-sys.path.append (__resource__)
 
+sys.path.append (__resource__)
+print "%s, %s " % (__profile__ ,__resource__)
+from html2text import *
 #ID des boutons dans myWin.xml
 STATUS_LABEL   	= 100
 NX_MAIL       	= 101
@@ -135,18 +151,18 @@ class MailWindow(xbmcgui.WindowXML):
     dialog.create("Inbox","Logging in...")
     try:
        #Partie POP3
-       print "183 = %s, %s ,%s, %s " % (self.SERVER,self.PORT , self.USER, self.TYPE)
+       #print "183 = %s, %s ,%s, %s " % (self.SERVER,self.PORT , self.USER, self.TYPE)
        if  '0' in self.TYPE:  #'POP' 
 	  if self.SSL:
 	       mail = poplib.POP3_SSL(str(self.SERVER),int(self.PORT))
 	  else:  #'POP3'
-	       print "190"
+	       #print "190"
 	       mail = poplib.POP3(str(self.SERVER),int(self.PORT))
-	  print "191"
+	  #print "191"
           mail.user(str(self.USER))
           mail.pass_(str(self.PASSWORD))
           numEmails = mail.stat()[0]
-	  print "194"
+	  #print "194"
 #       #if '1' in self.TYPE: #IMAP
 #       #   if self.SSL:
 #	       imap = imaplib.IMAP4_SSL(self.SERVER, int(self.PORT))
@@ -238,7 +254,7 @@ class MailWindow(xbmcgui.WindowXML):
                             ).encode('utf8','replace')
 		       except Exception ,e:
 			       print str(e)
-			       print "####> %s " % part.get_payload()
+			       #print "####> %s " % part.get_payload()
 			       print "---------------------------------------------------"
 			       body += "Erreur unicode"
                    elif part.get_content_type() == "text/html":
@@ -247,12 +263,17 @@ class MailWindow(xbmcgui.WindowXML):
 #		      print "ligne 241"
 		      try :
                             html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('utf8','replace')
+			    #html2 = html2text(html)
+                            #html = self.html2text(html)
+			    print "HTML ==> %s " % html
+			    html = html2text(html)
+			    #print "HTML => %s" % html
                       except Exception ,e:
 			    print str(e)
 			    body += "Erreur unicode html"
 
                    realname = parseaddr(msgobj.get('From'))[1]
-                   print "FROM = %s " % realname
+                   #print "FROM = %s " % realname
                 Sujet = subject 
                 #print "Sujet = ", Sujet
                 #description = 'De :' + realname + '\nSujet :' + Sujet + "\nDate :" + date
