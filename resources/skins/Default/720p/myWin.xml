@@ -67,7 +67,7 @@
         <textcolor>white</textcolor>
         <aligny>center</aligny>
         <align>center</align>
-        <label>$INFO[Container(120).ListItem.Property(updated)]</label>
+        <label>$INFO[Container(120).ListItem.Property(date)]</label>
       </control>
       
       <control type="image">
@@ -292,7 +292,7 @@
             <textcolor>white</textcolor>
             <selectedcolor>green</selectedcolor>
             <align>left</align>
-            <info>ListItem.Property(summary)</info>
+            <info>ListItem.Property(realname)</info>
 	  </control>
 
         </focusedlayout>
