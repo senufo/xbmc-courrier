@@ -30,10 +30,5 @@
        <setting id="type3" type="enum" label="30106" values="POP3|IMAP" default="POP3"/>
        <setting id="folder3" type="text" label="30116"  default="INBOX"/>
     </category>
-    <category>
-	    <setting id="time" type="text" label="30107" default="60" />
-	    <setting id="popup" type="bool" label="30114" default="True" />
-	    <setting id="erreur" type="bool" label="30115" default="True" />
-    </category>
 </settings>
 
