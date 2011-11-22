@@ -5,9 +5,15 @@
   
     <string id="610">Connection au serveur ...</string>
     <string id="611">(%s) Nouveau(x) courriels</string>
-    <string id="612">Received on %s (UTC)</string>
-    <string id="613">Error Connecting to Gmail</string>
-    <string id="614">Please set Username and Password</string>
+    <string id="612">Pas de courriel</string>
+    <string id="613">Erreur de connection</string>
+    <string id="614">Boite de réception</string>
+    <string id="615">Vous avez</string>
+    <string id="616"> message(s)</string>
+    <string id="617">Message(s)</string>
+    <string id="618">récupère le courrier</string>
+    <string id="619">Attendez, SVP...</string>
+    <string id="620">Problème de connection au serveur : %s</string> 
 
   <!-- Script Settings -->
 

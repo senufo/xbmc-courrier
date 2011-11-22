@@ -131,7 +131,7 @@ class MailWindow(xbmcgui.WindowXML):
 	self.SSL = SSL
 	print "self.SERVER = %s " % self.SERVER
     dialog = xbmcgui.DialogProgress()
-    dialog.create("Inbox","Logging in...")
+    dialog.create(Addon.getLocalizedString(id=614), Addon.getLocalizedString(id=610))  #Inbox,  Logging in...
     try:
        #Partie POP3
        if  '0' in self.TYPE:  #'POP' 
@@ -164,16 +164,17 @@ class MailWindow(xbmcgui.WindowXML):
        dialog.close()
        if numEmails == 0:
             dialogOK = xbmcgui.Dialog()
-	    dialogOK.ok("%s" % NOM ,"Pas de courriels")
+	    dialogOK.ok("%s" % NOM ,Addon.getLocalizedString(id=612)) #no mail 
 	    self.getControl( EMAIL_LIST ).reset()
-       else:
-            dialog.create("Inbox","You have " + str(numEmails) + " emails")
+       else:              #Inbox                           #You have                                           #emails
+            dialog.create(Addon.getLocalizedString(id=613),Addon.getLocalizedString(id=615) + str(numEmails) + Addon.getLocalizedString(id=616))
             ##Retrieve list of mails
             resp, items, octets = mail.list()
             dialog.close()
             #On recupere tous les messages pour les afficher
             progressDialog = xbmcgui.DialogProgress()
-            progressDialog.create('Message(s)', 'Get mail')
+                                  #Message(s)                       #Get mail
+            progressDialog.create(Addon.getLocalizedString(id=617), Addon.getLocalizedString(id=618))
             i = 0
             #Mise a zero de la ListBox msg
             self.getControl( EMAIL_LIST ).reset()
@@ -183,8 +184,8 @@ class MailWindow(xbmcgui.WindowXML):
                 #print "item %s" % item
 	        id, size = string.split(item)
 		#progressDialog.update((id*100)/numEmails)
-                up = (i*100)/numEmails
-                progressDialog.update(up, 'Get mail', 'Please wait')
+                up = (i*100)/numEmails    #Get mail                         Please wait
+                progressDialog.update(up, Addon.getLocalizedString(id=618), Addon.getLocalizedString(id=619))
 		#resp, text, octets = mail.top(id,300)
 		resp, text, octets = mail.retr(id)
 	        text = string.join(text, "\n")
@@ -267,8 +268,8 @@ class MailWindow(xbmcgui.WindowXML):
     except Exception, e:
 	print "=============>"
         print str( e )
-        dialog.close()
-	dialog.create("Inbox","Problem connecting to server : %s" % self.SERVER)
+        dialog.close() #"Inbox"                         "Problem connecting to server : %s" 
+	dialog.create(Addon.getLocalizedString(id=614),Addon.getLocalizedString(id=620) % self.SERVER)
         time.sleep(5)
         dialog.close()
   
