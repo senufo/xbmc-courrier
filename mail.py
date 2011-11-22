@@ -168,7 +168,7 @@ class MailWindow(xbmcgui.WindowXML):
 	    self.getControl( EMAIL_LIST ).reset()
        else:              #Inbox                           #You have                                           #emails
             dialog.create(Addon.getLocalizedString(id=613),Addon.getLocalizedString(id=615) + str(numEmails) + Addon.getLocalizedString(id=616))
-            ##Retrieve list of mails
+	    ##Retrieve list of mails
             resp, items, octets = mail.list()
             dialog.close()
             #On recupere tous les messages pour les afficher
@@ -183,10 +183,12 @@ class MailWindow(xbmcgui.WindowXML):
                 i = i + 1
                 #print "item %s" % item
 	        id, size = string.split(item)
+		print "size = %s " % size
 		#progressDialog.update((id*100)/numEmails)
                 up = (i*100)/numEmails    #Get mail                         Please wait
                 progressDialog.update(up, Addon.getLocalizedString(id=618), Addon.getLocalizedString(id=619))
 		#resp, text, octets = mail.top(id,300)
+			
 		resp, text, octets = mail.retr(id)
 	        text = string.join(text, "\n")
                 myemail = email.message_from_string(text)
