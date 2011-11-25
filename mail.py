@@ -87,11 +87,13 @@ class MailWindow(xbmcgui.WindowXML):
 
     self.getControl( EMAIL_LIST ).reset()
     for i in [1,2,3]:
-	id = 'name' + str(i)
-    	NOM =  Addon.getSetting( id )
+        id = 'name' + str(i)
+        NOM =  Addon.getSetting( id )
         Button_Name = 1000 + i 
         self.getControl( Button_Name ).setLabel( NOM )
-    self.checkEmail(Addon.getSetting( 'name1' ))
+        print "I = %d "  % i
+    print "Fin Boucle"
+    #self.checkEmail(Addon.getSetting( 'name1' ))
 
 
 	   
@@ -282,7 +284,7 @@ class MailWindow(xbmcgui.WindowXML):
     self.emails = []
  
 
-    def onAction(self, action):
+  def onAction(self, action):
         #print "ID Action %d" % action.getId()
         #print "Code Action %d" % action.getButtonCode()
         if action == ACTION_PREVIOUS_MENU:
@@ -302,7 +304,7 @@ class MailWindow(xbmcgui.WindowXML):
                 self.position = self.position + 1
             self.getControl( MSG_BODY ).scroll(self.position)
 																       
-    def onClick( self, controlId ):
+  def onClick( self, controlId ):
         print "onClick controId = %d " % controlId
         if (controlId in [SERVER1,SERVER2,SERVER3]):
             label = self.getControl( controlId ).getLabel()
