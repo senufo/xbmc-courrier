@@ -93,7 +93,7 @@ class MailWindow(xbmcgui.WindowXML):
         self.getControl( Button_Name ).setLabel( NOM )
         print "I = %d "  % i
     print "Fin Boucle"
-    #self.checkEmail(Addon.getSetting( 'name1' ))
+    self.checkEmail(Addon.getSetting( 'name1' ))
 
 
 	   
@@ -125,25 +125,25 @@ class MailWindow(xbmcgui.WindowXML):
         print "SERVER = %s, PORT = %s, USER = %s, password = %s, SSL = %s, TYPE = %s" % (SERVER,PORT,USER, PASSWORD, SSL,TYPE)
         #On cherche le serveur selectionne
         if (alias == NOM):
-	        self.SERVER = SERVER 
-	        self.USER = USER
-	        self.PORT = PORT
-	        self.PASSWORD = PASSWORD
-	        self.TYPE = TYPE
-	        self.SSL = SSL
-	        print "self.SERVER = %s " % self.SERVER
-        dialog = xbmcgui.DialogProgress()
-        dialog.create(Addon.getLocalizedString(id=614), Addon.getLocalizedString(id=610))  #Inbox,  Logging in...
-        try:
-            #Partie POP3
-            if  '0' in self.TYPE:  #'POP' 
-	            if self.SSL:
-	                mail = poplib.POP3_SSL(str(self.SERVER),int(self.PORT))
-	            else:  #'POP3'
-	                mail = poplib.POP3(str(self.SERVER),int(self.PORT))
-            mail.user(str(self.USER))
-            mail.pass_(str(self.PASSWORD))
-            numEmails = mail.stat()[0]
+            self.SERVER = SERVER 
+            self.USER = USER
+            self.PORT = PORT
+            self.PASSWORD = PASSWORD
+            self.TYPE = TYPE
+            self.SSL = SSL
+            print "self.SERVER = %s " % self.SERVER
+            dialog = xbmcgui.DialogProgress()
+            dialog.create(Addon.getLocalizedString(id=614), Addon.getLocalizedString(id=610))  #Inbox,  Logging in...
+            try:
+                #Partie POP3
+                if  '0' in self.TYPE:  #'POP' 
+                    if self.SSL:
+                        mail = poplib.POP3_SSL(str(self.SERVER),int(self.PORT))
+                    else:  #'POP3'
+                        mail = poplib.POP3(str(self.SERVER),int(self.PORT))
+                    mail.user(str(self.USER))
+                    mail.pass_(str(self.PASSWORD))
+                    numEmails = mail.stat()[0]
 #       #if '1' in self.TYPE: #IMAP
 #       #   if self.SSL:
 #	       imap = imaplib.IMAP4_SSL(self.SERVER, int(self.PORT))
@@ -160,122 +160,122 @@ class MailWindow(xbmcgui.WindowXML):
 #	  self.getImapMails(imap)
 #	  return
 
-            print "You have", numEmails, "emails"
-            #Affiche le nombre de msg
-            self.getControl( NX_MAIL ).setLabel( '%d msg(s)' % numEmails )
-            dialog.close()
-            if numEmails == 0:
-                dialogOK = xbmcgui.Dialog()
-                dialogOK.ok("%s" % NOM ,Addon.getLocalizedString(id=612)) #no mail 
-                self.getControl( EMAIL_LIST ).reset()
-            else:              #Inbox                           #You have                                           #emails
-                dialog.create(Addon.getLocalizedString(id=613),Addon.getLocalizedString(id=615) + str(numEmails) + Addon.getLocalizedString(id=616))
-	            ##Retrieve list of mails
-                resp, items, octets = mail.list()
+                print "You have", numEmails, "emails"
+                #Affiche le nombre de msg
+                self.getControl( NX_MAIL ).setLabel( '%d msg(s)' % numEmails )
                 dialog.close()
-                #On recupere tous les messages pour les afficher
-                progressDialog = xbmcgui.DialogProgress()
-                                      #Message(s)                       #Get mail
-                progressDialog.create(Addon.getLocalizedString(id=617), Addon.getLocalizedString(id=618))
-                i = 0
-                #Mise a zero de la ListBox msg
-                self.getControl( EMAIL_LIST ).reset()
-                self.emails = []
-                for item in items:
-                    i = i + 1
-                    #print "item %s" % item
-                    id, size = string.split(item)
-                    print "size = %s " % size
-		            #progressDialog.update((id*100)/numEmails)
-                    up = (i*100)/numEmails    #Get mail                         Please wait
-                    progressDialog.update(up, Addon.getLocalizedString(id=618), Addon.getLocalizedString(id=619))
-		            #resp, text, octets = mail.top(id,300)
+                if numEmails == 0:
+                    dialogOK = xbmcgui.Dialog()
+                    dialogOK.ok("%s" % NOM ,Addon.getLocalizedString(id=612)) #no mail 
+                    self.getControl( EMAIL_LIST ).reset()
+                else:              #Inbox                           #You have                                           #emails
+                    dialog.create(Addon.getLocalizedString(id=613),Addon.getLocalizedString(id=615) + str(numEmails) + Addon.getLocalizedString(id=616))
+	                ##Retrieve list of mails
+                    resp, items, octets = mail.list()
+                    dialog.close()
+                    #On recupere tous les messages pour les afficher
+                    progressDialog = xbmcgui.DialogProgress()
+                                          #Message(s)                       #Get mail
+                    progressDialog.create(Addon.getLocalizedString(id=617), Addon.getLocalizedString(id=618))
+                    i = 0
+                    #Mise a zero de la ListBox msg
+                    self.getControl( EMAIL_LIST ).reset()
+                    self.emails = []
+                    for item in items:
+                        i = i + 1
+                        #print "item %s" % item
+                        id, size = string.split(item)
+                        print "size = %s " % size
+		                #progressDialog.update((id*100)/numEmails)
+                        up = (i*100)/numEmails    #Get mail                         Please wait
+                        progressDialog.update(up, Addon.getLocalizedString(id=618), Addon.getLocalizedString(id=619))
+		                #resp, text, octets = mail.top(id,300)
 			
-                    resp, text, octets = mail.retr(id)
-                    text = string.join(text, "\n")
-                    myemail = email.message_from_string(text)
-                    p = EmailParser()
-                    msgobj = p.parsestr(text)
-		            #print "res = % s, text = %s, size = %d" % (resp, text, octets)
-                    if msgobj['Subject'] is not None:
-                        decodefrag = decode_header(msgobj['Subject'])
-                        subj_fragments = []
-                        for s , enc in decodefrag:
-                            if enc:
-                                s = unicode(s , enc).encode('utf8','replace')
-                            subj_fragments.append(s)
-                        subject = ''.join(subj_fragments)
-                    else:
-                        subject = None
-    	            if msgobj['Date'] is not None:
-                        date = msgobj['Date']
-                    else:
-                        date = '--'
-                    Sujet = subject
-                    realname = parseaddr(msgobj.get('From'))[1]
-
-                    attachments = []
-                    body = None
-                    html = None
-                    for part in msgobj.walk():
-                    #content_disposition = part.get("Content-Disposition", None)        
-                    #print "content-disp =", content_disposition
-                        if part.get_content_type() == "text/plain":
-                            if body is None:
-                                body = ""
-                            try :
-                                body += unicode(
-                                    part.get_payload(decode=True),
-                                    part.get_content_charset(),
-                                    'replace'
-                                    ).encode('utf8','replace')
-                            except Exception ,e:
-                                print "UNICODE ERROR text/plain"
-                                print str(e)
-    		                    #print "####> %s " % part.get_payload()
-                                body += "Erreur unicode"
-                        elif part.get_content_type() == "text/html":
-                            if html is None:
-                                html = ""
-                            try :
-                                print "Charset = %s " % part.get_content_charset()
-                                #html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('utf8','replace')
-                                html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('ascii','replace')
-                                print "=>"
-                                html = html2text(html)
-                                print "<="
-			                    #print "HTML => %s" % html
-                            except Exception ,e:
-                                print "UNICODE ERROR text/html"
-                                print str(e)
-                                body += "Erreur unicode html"
-
+                        resp, text, octets = mail.retr(id)
+                        text = string.join(text, "\n")
+                        myemail = email.message_from_string(text)
+                        p = EmailParser()
+                        msgobj = p.parsestr(text)
+		                #print "res = % s, text = %s, size = %d" % (resp, text, octets)
+                        if msgobj['Subject'] is not None:
+                            decodefrag = decode_header(msgobj['Subject'])
+                            subj_fragments = []
+                            for s , enc in decodefrag:
+                                if enc:
+                                    s = unicode(s , enc).encode('utf8','replace')
+                                subj_fragments.append(s)
+                            subject = ''.join(subj_fragments)
+                        else:
+                            subject = None
+                        if msgobj['Date'] is not None:
+                            date = msgobj['Date']
+                        else:
+                            date = '--'
+                        Sujet = subject
                         realname = parseaddr(msgobj.get('From'))[1]
-                    Sujet = subject 
-                    description = ' '
-                    if (body):
-                        description = str(body)
-                    else:
-                        description = str(html)
-		            #Nb de lignes du msg pour permettre le scroll text
-                    self.nb_lignes = description.count("\n")
- 
-                    listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
-                    listitem.setProperty( "realname", realname )    
-                    listitem.setProperty( "date", date )   
-                    listitem.setProperty( "message", description )
-                    self.getControl( EMAIL_LIST ).addItem( listitem )
-                progressDialog.close()
-                #Affiche le 1er mail de la liste
-                self.getControl( EMAIL_LIST ).selectItem(0)
 
-        except Exception, e:
-            print "=============>"
-            print str( e )
-            dialog.close() #"Inbox"                         "Problem connecting to server : %s" 
-            dialog.create(Addon.getLocalizedString(id=614),Addon.getLocalizedString(id=620) % self.SERVER)
-            time.sleep(5)
-            dialog.close()
+                        attachments = []
+                        body = None
+                        html = None
+                        for part in msgobj.walk():
+                        #content_disposition = part.get("Content-Disposition", None)        
+                        #print "content-disp =", content_disposition
+                            if part.get_content_type() == "text/plain":
+                                if body is None:
+                                    body = ""
+                                try :
+                                    body += unicode(
+                                        part.get_payload(decode=True),
+                                        part.get_content_charset(),
+                                        'replace'
+                                        ).encode('utf8','replace')
+                                except Exception ,e:
+                                    print "UNICODE ERROR text/plain"
+                                    print str(e)
+        	                        #print "####> %s " % part.get_payload()
+                                    body += "Erreur unicode"
+                            elif part.get_content_type() == "text/html":
+                                if html is None:
+                                    html = ""
+                                try :
+                                    print "Charset = %s " % part.get_content_charset()
+                                    #html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('utf8','replace')
+                                    html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('ascii','replace')
+                                    print "=>"
+                                    html = html2text(html)
+                                    print "<="
+			                        #print "HTML => %s" % html
+                                except Exception ,e:
+                                    print "UNICODE ERROR text/html"
+                                    print str(e)
+                                    body += "Erreur unicode html"
+
+                            realname = parseaddr(msgobj.get('From'))[1]
+                        Sujet = subject 
+                        description = ' '
+                        if (body):
+                            description = str(body)
+                        else:
+                            description = str(html)
+		                #Nb de lignes du msg pour permettre le scroll text
+                        self.nb_lignes = description.count("\n")
+ 
+                        listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
+                        listitem.setProperty( "realname", realname )    
+                        listitem.setProperty( "date", date )   
+                        listitem.setProperty( "message", description )
+                        self.getControl( EMAIL_LIST ).addItem( listitem )
+                    progressDialog.close()
+                    #Affiche le 1er mail de la liste
+                    self.getControl( EMAIL_LIST ).selectItem(0)
+
+            except Exception, e:
+                print "=============>"
+                print str( e )
+                dialog.close() #"Inbox"                         "Problem connecting to server : %s" 
+                dialog.create(Addon.getLocalizedString(id=614),Addon.getLocalizedString(id=620) % self.SERVER)
+                time.sleep(5)
+                dialog.close()
   
   def getImapMails(self, imap):
     print "getImapMails"
@@ -307,6 +307,7 @@ class MailWindow(xbmcgui.WindowXML):
   def onClick( self, controlId ):
         print "onClick controId = %d " % controlId
         if (controlId in [SERVER1,SERVER2,SERVER3]):
+            print "onClick controId bis = %d " % controlId
             label = self.getControl( controlId ).getLabel()
             self.checkEmail(label)
         elif (controlId == QUIT):
