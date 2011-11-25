@@ -1,6 +1,6 @@
 #Script pour consulter ses mails
 #Senufo, 2011 (c)
-#Version 0.0.3
+#Version 0.0.6
 #
 # $Date: 2011-11-13 22:23:30 +0100 (dim. 13 nov. 2011) $
 # $Author: Senufo $
@@ -90,7 +90,10 @@ class MailWindow(xbmcgui.WindowXML):
         id = 'name' + str(i)
         NOM =  Addon.getSetting( id )
         Button_Name = 1000 + i 
-        self.getControl( Button_Name ).setLabel( NOM )
+        if NOM:
+            self.getControl( Button_Name ).setLabel( NOM )
+        else:
+            self.getControl( Button_Name ).setEnabled(False)
         print "I = %d "  % i
     print "Fin Boucle"
     self.checkEmail(Addon.getSetting( 'name1' ))

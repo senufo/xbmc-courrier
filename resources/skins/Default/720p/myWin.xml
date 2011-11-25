@@ -116,7 +116,7 @@
           <colordiffuse>FFFFFFFF</colordiffuse>
           <texturefocus>default-list-focus.png</texturefocus>
           <texturenofocus>default-list-nofocus.png</texturenofocus>
-          <label>Bouton 1</label>
+          <label></label>
           <font>font14</font>
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
@@ -135,7 +135,7 @@
           <colordiffuse>FFFFFFFF</colordiffuse>
           <texturefocus>default-list-focus.png</texturefocus>
           <texturenofocus>default-list-nofocus.png</texturenofocus>
-          <label>Bouton 2</label>
+          <label></label>
           <font>font14</font>
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
@@ -154,7 +154,7 @@
           <colordiffuse>FFFFFFFF</colordiffuse>
           <texturefocus>default-list-focus.png</texturefocus>
           <texturenofocus>default-list-nofocus.png</texturenofocus>
-          <label>Bouton 3</label>
+          <label></label>
           <font>font14</font>
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
