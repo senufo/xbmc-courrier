@@ -234,9 +234,7 @@ class MailWindow(xbmcgui.WindowXML):
                                         part.get_payload(decode=True),
                                         part.get_content_charset(),
                                         'replace'
-                                        ).encode('ascii','replace')
-                                    print "<-"
-                                        #).encode('utf8','replace')
+                                        ).encode('utf8','replace')
                                 except Exception ,e:
                                     print "UNICODE ERROR text/plain"
                                     print str(e)
@@ -266,7 +264,7 @@ class MailWindow(xbmcgui.WindowXML):
                             description = str(body)
                         else:
                             print "ligne 268"
-                            html = html.encode('utf-8','replace')
+                            html = html.encode('ascii','replace')
                             description = str(html)
                         print "ligne 269"
 		                #Nb de lignes du msg pour permettre le scroll text
