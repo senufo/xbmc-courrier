@@ -205,7 +205,9 @@ class MailWindow(xbmcgui.WindowXML):
                             subj_fragments = []
                             for s , enc in decodefrag:
                                 if enc:
+                                    print "&&>"
                                     s = unicode(s , enc).encode('utf8','replace')
+                                    print "<&&"
                                 subj_fragments.append(s)
                             subject = ''.join(subj_fragments)
                         else:
@@ -227,11 +229,14 @@ class MailWindow(xbmcgui.WindowXML):
                                 if body is None:
                                     body = ""
                                 try :
+                                    print "->"
                                     body += unicode(
                                         part.get_payload(decode=True),
                                         part.get_content_charset(),
                                         'replace'
-                                        ).encode('utf8','replace')
+                                        ).encode('ascii','replace')
+                                    print "<-"
+                                        #).encode('utf8','replace')
                                 except Exception ,e:
                                     print "UNICODE ERROR text/plain"
                                     print str(e)
@@ -243,8 +248,8 @@ class MailWindow(xbmcgui.WindowXML):
                                 try :
                                     print "Charset = %s " % part.get_content_charset()
                                     #html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('utf8','replace')
-                                    html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('ascii','replace')
                                     print "=>"
+                                    html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('ascii','replace')
                                     html = html2text(html)
                                     print "<="
 			                        #print "HTML => %s" % html
@@ -252,22 +257,28 @@ class MailWindow(xbmcgui.WindowXML):
                                     print "UNICODE ERROR text/html"
                                     print str(e)
                                     body += "Erreur unicode html"
-
+                            print "ligne 260"
                             realname = parseaddr(msgobj.get('From'))[1]
                         Sujet = subject 
                         description = ' '
+                        print "ligne 264"
                         if (body):
                             description = str(body)
                         else:
+                            print "ligne 268"
+                            html = html.encode('utf-8','replace')
                             description = str(html)
+                        print "ligne 269"
 		                #Nb de lignes du msg pour permettre le scroll text
                         self.nb_lignes = description.count("\n")
+                        print "ligne 272"
  
                         listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
                         listitem.setProperty( "realname", realname )    
                         listitem.setProperty( "date", date )   
                         listitem.setProperty( "message", description )
                         self.getControl( EMAIL_LIST ).addItem( listitem )
+                        print "ligne 279"
                     progressDialog.close()
                     #Affiche le 1er mail de la liste
                     self.getControl( EMAIL_LIST ).selectItem(0)
