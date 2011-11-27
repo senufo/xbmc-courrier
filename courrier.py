@@ -199,6 +199,7 @@ class MailWindow(xbmcgui.WindowXML):
                             resp, text, octets = mail.retr(id)
                         else: 
                             resp, text, octets = mail.top(id,300)
+                        att_file = ','
 
                         print "size = %s " % size
 		                #resp, text, octets = mail.top(id,300)
@@ -228,7 +229,7 @@ class MailWindow(xbmcgui.WindowXML):
                         attachments = []
                         body = None
                         html = None
-                        att_file = 'Pas de fichier'
+                        #att_file = ','
                         for part in msgobj.walk():
                             content_disposition = part.get("Content-Disposition", None)
                             prog = re.compile('attachment')
@@ -239,7 +240,7 @@ class MailWindow(xbmcgui.WindowXML):
                                 file_att = str(content_disposition)
                                 
                                 pattern = Pattern(r"\"(.+)\"")
-                                att_file =  pattern.findall(file_att)
+                                att_file +=  str(pattern.findall(file_att))
                                 print "FILE : %s " % att_file
                             else:
                                 print "2=> content-disp = %s " % content_disposition
