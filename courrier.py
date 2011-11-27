@@ -75,7 +75,8 @@ SERVER1		= 1001
 SERVER2		= 1002
 SERVER3		= 1003
 QUIT		= 1004
-MAX_SIZE_MSG = 10000
+MAX_SIZE_MSG = int(Addon.getSetting( 'max_msg_size' ))
+
 class MailWindow(xbmcgui.WindowXML):
    
   def __init__(self, *args, **kwargs):
