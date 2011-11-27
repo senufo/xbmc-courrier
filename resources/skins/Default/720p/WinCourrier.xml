@@ -183,7 +183,21 @@
           <onleft>120</onleft>
           <onright>120</onright>
        </control>
- 
+       <!-- Label fichier attache -->
+      <control type="label" id="1005">
+        <description>textarea : fichier attache</description>
+        <posx>40</posx>
+        <posy>400</posy>
+        <width>i50</width>
+        <height>40</height>
+        <visible>true</visible>
+        <font>font18</font>
+        <textcolor>white</textcolor>
+        <aligny>center</aligny>
+        <align>center</align>
+        <label>$INFO[Container(120).ListItem.Property(att_file)]</label>
+      </control>
+
        <!-- separation entre list et msgbody -->
        <control type="image">
         <posx>220</posx>

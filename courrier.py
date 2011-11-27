@@ -9,6 +9,7 @@
 import xbmc, xbmcgui
 import xbmcaddon
 import os, re
+from re import compile as Pattern
 
 __author__     = "Senufo"
 __scriptid__   = "script.mail"
@@ -75,6 +76,7 @@ SERVER1		= 1001
 SERVER2		= 1002
 SERVER3		= 1003
 QUIT		= 1004
+FILE_ATT	= 1005
 MAX_SIZE_MSG = int(Addon.getSetting( 'max_msg_size' ))
 
 class MailWindow(xbmcgui.WindowXML):
@@ -226,9 +228,22 @@ class MailWindow(xbmcgui.WindowXML):
                         attachments = []
                         body = None
                         html = None
+                        att_file = 'Pas de fichier'
                         for part in msgobj.walk():
-                        #content_disposition = part.get("Content-Disposition", None)        
-                        #print "content-disp =", content_disposition
+                            content_disposition = part.get("Content-Disposition", None)
+                            prog = re.compile('attachment')
+                            #print "content-disp = %s " % content_disposition
+                            #Retrouve le nom des fichiers attaches
+                            if prog.search(str(content_disposition)):
+                                print "content-disp = %s " % content_disposition
+                                file_att = str(content_disposition)
+                                
+                                pattern = Pattern(r"\"(.+)\"")
+                                att_file =  pattern.findall(file_att)
+                                print "FILE : %s " % att_file
+                            else:
+                                print "2=> content-disp = %s " % content_disposition
+
                             if part.get_content_type() == "text/plain":
                                 if body is None:
                                     body = ""
@@ -268,9 +283,12 @@ class MailWindow(xbmcgui.WindowXML):
                         self.nb_lignes = description.count("\n")
  
                         listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
-                        listitem.setProperty( "realname", realname )    
+                        listitem.setProperty( "realname", realname )
+                        date += att_file
+                        print "DAT_FILE = %s " % date
                         listitem.setProperty( "date", date )   
                         listitem.setProperty( "message", description )
+                        listitem.setProperty( "att_file", att_file )
                         self.getControl( EMAIL_LIST ).addItem( listitem )
                     progressDialog.close()
                     #Affiche le 1er mail de la liste
