@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #Script pour consulter ses mails
 #Senufo, 2011 (c)
 #Version 0.0.6
@@ -74,7 +75,7 @@ SERVER1		= 1001
 SERVER2		= 1002
 SERVER3		= 1003
 QUIT		= 1004
-
+MAX_SIZE_MSG = 10000
 class MailWindow(xbmcgui.WindowXML):
    
   def __init__(self, *args, **kwargs):
@@ -94,8 +95,6 @@ class MailWindow(xbmcgui.WindowXML):
             self.getControl( Button_Name ).setLabel( NOM )
         else:
             self.getControl( Button_Name ).setEnabled(False)
-        print "I = %d "  % i
-    print "Fin Boucle"
     self.checkEmail(Addon.getSetting( 'name1' ))
 
 
@@ -125,7 +124,7 @@ class MailWindow(xbmcgui.WindowXML):
         SSL = Addon.getSetting( 'ssl%i' % i ) == "true"
         TYPE = Addon.getSetting( 'type%i' % i )
         FOLDER = Addon.getSetting( 'folder%i' % i )
-        print "SERVER = %s, PORT = %s, USER = %s, password = %s, SSL = %s, TYPE = %s" % (SERVER,PORT,USER, PASSWORD, SSL,TYPE)
+        #print "SERVER = %s, PORT = %s, USER = %s, password = %s, SSL = %s, TYPE = %s" % (SERVER,PORT,USER, PASSWORD, SSL,TYPE)
         #On cherche le serveur selectionne
         if (alias == NOM):
             self.SERVER = SERVER 
@@ -188,13 +187,19 @@ class MailWindow(xbmcgui.WindowXML):
                         i = i + 1
                         #print "item %s" % item
                         id, size = string.split(item)
-                        print "size = %s " % size
-		                #progressDialog.update((id*100)/numEmails)
+                        #progressDialog.update((id*100)/numEmails)
                         up = (i*100)/numEmails    #Get mail                         Please wait
                         progressDialog.update(up, Addon.getLocalizedString(id=618), Addon.getLocalizedString(id=619))
+
+                        #Si dépasse la taille max on télécharge que 50 lignes
+                        if (MAX_SIZE_MSG == 0) or (size < MAX_SIZE_MSG):
+                            resp, text, octets = mail.retr(id)
+                        else: 
+                            resp, text, octets = mail.top(id,300)
+
+                        print "size = %s " % size
 		                #resp, text, octets = mail.top(id,300)
-			
-                        resp, text, octets = mail.retr(id)
+                        #resp, text, octets = mail.retr(id)
                         text = string.join(text, "\n")
                         myemail = email.message_from_string(text)
                         p = EmailParser()
@@ -205,9 +210,7 @@ class MailWindow(xbmcgui.WindowXML):
                             subj_fragments = []
                             for s , enc in decodefrag:
                                 if enc:
-                                    print "&&>"
                                     s = unicode(s , enc).encode('utf8','replace')
-                                    print "<&&"
                                 subj_fragments.append(s)
                             subject = ''.join(subj_fragments)
                         else:
@@ -229,7 +232,6 @@ class MailWindow(xbmcgui.WindowXML):
                                 if body is None:
                                     body = ""
                                 try :
-                                    print "->"
                                     body += unicode(
                                         part.get_payload(decode=True),
                                         part.get_content_charset(),
@@ -246,37 +248,29 @@ class MailWindow(xbmcgui.WindowXML):
                                 try :
                                     print "Charset = %s " % part.get_content_charset()
                                     #html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('utf8','replace')
-                                    print "=>"
                                     html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('ascii','replace')
                                     html = html2text(html)
-                                    print "<="
 			                        #print "HTML => %s" % html
                                 except Exception ,e:
                                     print "UNICODE ERROR text/html"
                                     print str(e)
                                     body += "Erreur unicode html"
-                            print "ligne 260"
                             realname = parseaddr(msgobj.get('From'))[1]
                         Sujet = subject 
                         description = ' '
-                        print "ligne 264"
                         if (body):
                             description = str(body)
                         else:
-                            print "ligne 268"
                             html = html.encode('ascii','replace')
                             description = str(html)
-                        print "ligne 269"
 		                #Nb de lignes du msg pour permettre le scroll text
                         self.nb_lignes = description.count("\n")
-                        print "ligne 272"
  
                         listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
                         listitem.setProperty( "realname", realname )    
                         listitem.setProperty( "date", date )   
                         listitem.setProperty( "message", description )
                         self.getControl( EMAIL_LIST ).addItem( listitem )
-                        print "ligne 279"
                     progressDialog.close()
                     #Affiche le 1er mail de la liste
                     self.getControl( EMAIL_LIST ).selectItem(0)
@@ -325,6 +319,6 @@ class MailWindow(xbmcgui.WindowXML):
         elif (controlId == QUIT):
             self.close()
 
-mydisplay = MailWindow( "myWin.xml" , __cwd__, "Default")
+mydisplay = MailWindow( "WinCourrier.xml" , __cwd__, "Default")
 mydisplay .doModal()
 del mydisplay
