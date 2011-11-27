@@ -7,7 +7,7 @@
     <import addon="xbmc.python" version="2.0"/>
   </requires>
   <extension point="xbmc.python.script"
-             library="mail.py" />
+             library="courrier.py" />
   <extension point="xbmc.addon.metadata">
     <summary lang="en">mail Checker</summary>
     <summary lang="fr">Courrier</summary> 
