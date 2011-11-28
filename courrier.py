@@ -247,14 +247,20 @@ class MailWindow(xbmcgui.WindowXML):
                                 if body is None:
                                     body = ""
                                 try :
-                                    body += unicode(
-                                        part.get_payload(decode=True),
-                                        part.get_content_charset(),
-                                        'replace'
-                                        ).encode('utf8','replace')
+                                    #Si pas de charset défini
+                                    if (part.get_content_charset() is None):
+                                        body +=  part.get_payload(decode=True)
+                                    else:
+                                        body += unicode(
+                                            part.get_payload(decode=True),
+                                            part.get_content_charset(),
+                                            'replace'
+                                            ).encode('utf8','replace')
                                 except Exception ,e:
                                     print "UNICODE ERROR text/plain"
                                     print str(e)
+                                    print "Type body = %s " % type(body)
+                                    print "Type charset = %s " % type(part.get_content_charset())
         	                        #print "####> %s " % part.get_payload()
                                     body += "Erreur unicode"
                             elif part.get_content_type() == "text/html":
@@ -270,7 +276,7 @@ class MailWindow(xbmcgui.WindowXML):
                                     print "UNICODE ERROR text/html"
                                     print str(e)
                                     print "Sujet =%s " % subject
-                                    #html.lower()
+                                    #Correct malfomed tag  
                                     html_raw = html.replace('<img','< img ',100)
                                     html_raw = html_raw.replace('<IMG','< img ',100)
                                     html_raw = html_raw.replace('<font','< font ',100)
