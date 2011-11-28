@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #Script pour consulter ses mails
 #Senufo, 2011 (c)
-#Version 0.0.6
+#Version 0.0.7
 #
 # $Date: 2011-11-13 22:23:30 +0100 (dim. 13 nov. 2011) $
 # $Author: Senufo $
