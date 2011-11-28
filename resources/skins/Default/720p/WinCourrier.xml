@@ -108,7 +108,7 @@
       <!--- Boutons Serveurs MAIL -->
       <control type="button" id="1001">
           <description>Server button control</description>
-          <posx>80</posx>
+          <posx>20</posx>
           <posy>126</posy>
           <width>135</width>
           <height>30</height>
@@ -127,7 +127,7 @@
       </control>
       <control type="button" id="1002">
           <description>Server button control</description>
-          <posx>80</posx>
+          <posx>20</posx>
           <posy>166</posy>
           <width>135</width>
           <height>30</height>
@@ -146,7 +146,7 @@
       </control>
       <control type="button" id="1003">
           <description>Server button control</description>
-          <posx>80</posx>
+          <posx>20</posx>
           <posy>206</posy>
           <width>135</width>
           <height>30</height>
@@ -166,7 +166,7 @@
        <!-- Bouton quitter -->
        <control type="button" id="1004">
           <description>Server button control</description>
-          <posx>80</posx>
+          <posx>20</posx>
           <posy>256</posy>
           <width>135</width>
           <height>30</height>
@@ -183,24 +183,10 @@
           <onleft>120</onleft>
           <onright>120</onright>
        </control>
-       <!-- Label fichier attache -->
-      <control type="label" id="1005">
-        <description>textarea : fichier attache</description>
-        <posx>40</posx>
-        <posy>400</posy>
-        <width>i50</width>
-        <height>40</height>
-        <visible>true</visible>
-        <font>font18</font>
-        <textcolor>white</textcolor>
-        <aligny>center</aligny>
-        <align>center</align>
-        <label>$INFO[Container(120).ListItem.Property(att_file)]</label>
-      </control>
 
        <!-- separation entre list et msgbody -->
        <control type="image">
-        <posx>220</posx>
+        <posx>180</posx>
         <posy>250</posy>
         <width>1000</width>
         <height>2</height>
@@ -210,7 +196,7 @@
        <!-- Texte du msg -->
        <control type="textbox" id="102">
         <description>textarea : Corps du mail</description>
-        <posx>220</posx>
+        <posx>180</posx>
         <posy>250</posy>
         <width>1000</width>
         <height>340</height>
@@ -226,7 +212,7 @@
       <!-- Liste des messages                          -->
       <control type="list" id="120">
         <description>Liste de messages</description>
-        <posx>220</posx>
+        <posx>180</posx>
         <posy>126</posy>
         <width>1040</width>
 	<height>120</height>

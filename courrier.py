@@ -200,7 +200,7 @@ class MailWindow(xbmcgui.WindowXML):
                             resp, text, octets = mail.retr(id)
                         else: 
                             resp, text, octets = mail.top(id,300)
-                        att_file = ','
+                        att_file = ':'
 
                         text = string.join(text, "\n")
                         myemail = email.message_from_string(text)
