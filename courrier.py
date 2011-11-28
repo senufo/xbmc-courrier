@@ -65,7 +65,7 @@ ACTION_VOLUME_DOWN     =   89
 ACTION_REWIND          =   77
 ACTION_FASTFORWARD     =   78
 
-#ID des boutons dans myWin.xml
+#ID des boutons dans WinCourrier.xml
 STATUS_LABEL   	= 100
 NX_MAIL       	= 101
 MSG_BODY	= 102
@@ -202,8 +202,6 @@ class MailWindow(xbmcgui.WindowXML):
                         att_file = ','
 
                         print "size = %s " % size
-		                #resp, text, octets = mail.top(id,300)
-                        #resp, text, octets = mail.retr(id)
                         text = string.join(text, "\n")
                         myemail = email.message_from_string(text)
                         p = EmailParser()
@@ -271,15 +269,30 @@ class MailWindow(xbmcgui.WindowXML):
                                 except Exception ,e:
                                     print "UNICODE ERROR text/html"
                                     print str(e)
-                                    body += "Erreur unicode html"
+                                    print "Sujet =%s " % subject
+                                    #html.lower()
+                                    html_raw = html.replace('<img','< img ',100)
+                                    html_raw = html_raw.replace('<IMG','< img ',100)
+                                    html_raw = html_raw.replace('<font','< font ',100)
+                                    html_raw = html_raw.replace('"?>','">',100)
+                                    print "HTML = %s " % html_raw
+                                    html = html2text(html_raw)
+
+                                    #body += "Erreur unicode html"
+                                    html += "Erreur unicode html"
                             realname = parseaddr(msgobj.get('From'))[1]
                         Sujet = subject 
                         description = ' '
                         if (body):
                             description = str(body)
                         else:
-                            html = html.encode('ascii','replace')
-                            description = str(html)
+                            try:
+                                print "Type = %s " % type(html)
+                                html = html.encode('ascii','replace')
+                                description = str(html)
+                            except Exception ,e:
+                                print "Erreur html.encode"
+                                print str(e)
 		                #Nb de lignes du msg pour permettre le scroll text
                         self.nb_lignes = description.count("\n")
  
@@ -289,7 +302,7 @@ class MailWindow(xbmcgui.WindowXML):
                         print "DAT_FILE = %s " % date
                         listitem.setProperty( "date", date )   
                         listitem.setProperty( "message", description )
-                        listitem.setProperty( "att_file", att_file )
+                        #listitem.setProperty( "att_file", att_file )
                         self.getControl( EMAIL_LIST ).addItem( listitem )
                     progressDialog.close()
                     #Affiche le 1er mail de la liste
