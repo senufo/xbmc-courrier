@@ -9,6 +9,9 @@
 import xbmc, xbmcgui
 import xbmcaddon
 import os, re
+from BeautifulSoup import *
+
+#import BeautifulSoup
 from re import compile as Pattern
 
 __author__     = "Senufo"
@@ -136,7 +139,7 @@ class MailWindow(xbmcgui.WindowXML):
             self.PASSWORD = PASSWORD
             self.TYPE = TYPE
             self.SSL = SSL
-            print "self.SERVER = %s " % self.SERVER
+            #print "self.SERVER = %s " % self.SERVER
             dialog = xbmcgui.DialogProgress()
             dialog.create(Addon.getLocalizedString(id=614), Addon.getLocalizedString(id=610))  #Inbox,  Logging in...
             try:
@@ -188,9 +191,7 @@ class MailWindow(xbmcgui.WindowXML):
                     self.emails = []
                     for item in items:
                         i = i + 1
-                        #print "item %s" % item
                         id, size = string.split(item)
-                        #progressDialog.update((id*100)/numEmails)
                         up = (i*100)/numEmails    #Get mail                         Please wait
                         progressDialog.update(up, Addon.getLocalizedString(id=618), Addon.getLocalizedString(id=619))
 
@@ -201,12 +202,10 @@ class MailWindow(xbmcgui.WindowXML):
                             resp, text, octets = mail.top(id,300)
                         att_file = ','
 
-                        print "size = %s " % size
                         text = string.join(text, "\n")
                         myemail = email.message_from_string(text)
                         p = EmailParser()
                         msgobj = p.parsestr(text)
-		                #print "res = % s, text = %s, size = %d" % (resp, text, octets)
                         if msgobj['Subject'] is not None:
                             decodefrag = decode_header(msgobj['Subject'])
                             subj_fragments = []
@@ -224,24 +223,23 @@ class MailWindow(xbmcgui.WindowXML):
                         Sujet = subject
                         realname = parseaddr(msgobj.get('From'))[1]
 
-                        attachments = []
+                        #attachments = []
                         body = None
                         html = None
                         #att_file = ','
                         for part in msgobj.walk():
                             content_disposition = part.get("Content-Disposition", None)
                             prog = re.compile('attachment')
-                            #print "content-disp = %s " % content_disposition
                             #Retrouve le nom des fichiers attaches
                             if prog.search(str(content_disposition)):
-                                print "content-disp = %s " % content_disposition
+                                #print "content-disp = %s " % content_disposition
                                 file_att = str(content_disposition)
                                 
                                 pattern = Pattern(r"\"(.+)\"")
                                 att_file +=  str(pattern.findall(file_att))
-                                print "FILE : %s " % att_file
-                            else:
-                                print "2=> content-disp = %s " % content_disposition
+                                #print "FILE : %s " % att_file
+                            #else:
+                            #    print "2=> content-disp = %s " % content_disposition
 
                             if part.get_content_type() == "text/plain":
                                 if body is None:
@@ -259,30 +257,33 @@ class MailWindow(xbmcgui.WindowXML):
                                 except Exception ,e:
                                     print "UNICODE ERROR text/plain"
                                     print str(e)
-                                    print "Type body = %s " % type(body)
-                                    print "Type charset = %s " % type(part.get_content_charset())
+                                    #print "Type body = %s " % type(body)
+                                    #print "Type charset = %s " % type(part.get_content_charset())
         	                        #print "####> %s " % part.get_payload()
                                     body += "Erreur unicode"
                             elif part.get_content_type() == "text/html":
                                 if html is None:
                                     html = ""
                                 try :
-                                    print "Charset = %s " % part.get_content_charset()
+                                    #print "Charset = %s " % part.get_content_charset()
+                                    unicode_coded_entities_html = unicode(BeautifulStoneSoup(html,convertEntities=BeautifulStoneSoup.HTML_ENTITIES))
+                                    #text = html2text.html2text(unicode_coded_entities_html)
+
                                     #html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('utf8','replace')
-                                    html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('ascii','replace')
+                                    #html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('ascii','replace')
+                                    html += unicode_coded_entities_html
                                     html = html2text(html)
-			                        #print "HTML => %s" % html
                                 except Exception ,e:
                                     print "UNICODE ERROR text/html"
                                     print str(e)
-                                    print "Sujet =%s " % subject
+                                    #print "Sujet =%s " % subject
                                     #Correct malfomed tag  
-                                    html_raw = html.replace('<img','< img ',100)
-                                    html_raw = html_raw.replace('<IMG','< img ',100)
-                                    html_raw = html_raw.replace('<font','< font ',100)
-                                    html_raw = html_raw.replace('"?>','">',100)
-                                    print "HTML = %s " % html_raw
-                                    html = html2text(html_raw)
+                                    #html_raw = html.replace('<img','< img ',100)
+                                    #html_raw = html_raw.replace('<IMG','< img ',100)
+                                    #html_raw = html_raw.replace('<font','< font ',100)
+                                    #html_raw = html_raw.replace('"?>','">',100)
+                                    #print "HTML = %s " % html_raw
+                                    #html = html2text(html_raw)
 
                                     #body += "Erreur unicode html"
                                     html += "Erreur unicode html"
@@ -293,7 +294,7 @@ class MailWindow(xbmcgui.WindowXML):
                             description = str(body)
                         else:
                             try:
-                                print "Type = %s " % type(html)
+                                #print "Type = %s " % type(html)
                                 html = html.encode('ascii','replace')
                                 description = str(html)
                             except Exception ,e:
@@ -305,7 +306,7 @@ class MailWindow(xbmcgui.WindowXML):
                         listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
                         listitem.setProperty( "realname", realname )
                         date += att_file
-                        print "DAT_FILE = %s " % date
+                        #print "DAT_FILE = %s " % date
                         listitem.setProperty( "date", date )   
                         listitem.setProperty( "message", description )
                         #listitem.setProperty( "att_file", att_file )
@@ -315,7 +316,6 @@ class MailWindow(xbmcgui.WindowXML):
                     self.getControl( EMAIL_LIST ).selectItem(0)
 
             except Exception, e:
-                print "=============>"
                 print str( e )
                 dialog.close() #"Inbox"                         "Problem connecting to server : %s" 
                 dialog.create(Addon.getLocalizedString(id=614),Addon.getLocalizedString(id=620) % self.SERVER)
@@ -336,10 +336,8 @@ class MailWindow(xbmcgui.WindowXML):
             self.close()
         if action == ACTION_MOVE_UP:
             controlId = action.getId()
-            print "ACTION _MOVE_UP"
         if action == ACTION_MOVE_DOWN:
             controlId = action.getButtonCode()
-            print "ACTION _MOVE_DOWN"
         if action == ACTION_FASTFORWARD: #PageUp
             if (self.position > 0):
                 self.position = self.position - 1
@@ -350,9 +348,8 @@ class MailWindow(xbmcgui.WindowXML):
             self.getControl( MSG_BODY ).scroll(self.position)
 																       
   def onClick( self, controlId ):
-        print "onClick controId = %d " % controlId
+        #print "onClick controId = %d " % controlId
         if (controlId in [SERVER1,SERVER2,SERVER3]):
-            print "onClick controId bis = %d " % controlId
             label = self.getControl( controlId ).getLabel()
             self.checkEmail(label)
         elif (controlId == QUIT):
