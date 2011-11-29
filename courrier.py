@@ -101,7 +101,7 @@ class MailWindow(xbmcgui.WindowXML):
             self.getControl( Button_Name ).setLabel( NOM )
         else:
             self.getControl( Button_Name ).setEnabled(False)
-    self.checkEmail(Addon.getSetting( 'name1' ))
+    #self.checkEmail(Addon.getSetting( 'name1' ))
 
 
 	   
@@ -512,17 +512,22 @@ class MailWindow(xbmcgui.WindowXML):
  
   def getImapMails(self):
     print "getImapMails"
+    print "server %s, user %s, password %s, folder %s, port %s\n" % (self.SERVER, self.USER,self.PASSWORD, self.FOLDER, self.PORT)
     #Mise a zero de la ListBox msg
-    self.getControl( EMAIL_LIST ).reset()
+    #self.getControl( EMAIL_LIST ).reset()
     self.emails = []
     try:
 	    #print "server %s, user %s, password %s, folder %s, port %s\n" % (self.server,self.user,self.password, self.folder, self.port)
-        if SSL.lower == 'true':
-		    imap = imaplib.IMAP4_SSL(self.SERVER, int(self.PORT))
+        print "server %s, user %s, password %s, folder %s, port %s\n" % (self.SERVER, self.USER,self.PASSWORD, self.FOLDER, self.PORT)
+        if self.SSL:
+		    imap = imaplib.IMAP4_SSL(str(self.SERVER), int(self.PORT))
         else:
-		    imap = imaplib.IMAP4(self.SERVER, int(self.PORT))
+		    imap = imaplib.IMAP4(str(self.SERVER), int(self.PORT))
+        print "Ligne 524"
         imap.login(self.USER, self.PASSWORD)
+        print "Ligne 528"
         imap.select(self.FOLDER)
+        print "Ligne 530"
         numEmails = len(imap.search(None, 'UnSeen')[1][0].split())
         print "You have", numEmails, "emails"
         #Affiche le nombre de msg
@@ -656,7 +661,8 @@ class MailWindow(xbmcgui.WindowXML):
             #Affiche le 1er mail de la liste
             self.getControl( EMAIL_LIST ).selectItem(0)
             imap.logout
-    except:
+    except Exception, e:
+        print str( e )
         print 'IMAP exception'
  
 
