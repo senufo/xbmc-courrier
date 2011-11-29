@@ -122,6 +122,7 @@ class MailWindow(xbmcgui.WindowXML):
     self.TYPE = ''
     self.FOLDER = ''
     for i in [1,2,3]:
+        NOM = Addon.getSetting( 'name%i' % i )
         USER = Addon.getSetting( 'user%i' % i )
         NOM =  Addon.getSetting( 'name%i' % i )
         SERVER = Addon.getSetting( 'server%i' % i )
@@ -133,12 +134,14 @@ class MailWindow(xbmcgui.WindowXML):
         #print "SERVER = %s, PORT = %s, USER = %s, password = %s, SSL = %s, TYPE = %s" % (SERVER,PORT,USER, PASSWORD, SSL,TYPE)
         #On cherche le serveur selectionne
         if (alias == NOM):
+            self.NOM = NOM
             self.SERVER = SERVER 
             self.USER = USER
             self.PORT = PORT
             self.PASSWORD = PASSWORD
             self.TYPE = TYPE
             self.SSL = SSL
+            self.FOLDER = FOLDER
             #print "self.SERVER = %s " % self.SERVER
             #dialog = xbmcgui.DialogProgress()
             #dialog.create(Addon.getLocalizedString(id=614), Addon.getLocalizedString(id=610))  #Inbox,  Logging in...
@@ -238,7 +241,7 @@ class MailWindow(xbmcgui.WindowXML):
                         #attachments = []
                         body = None
                         html = None
-                        #att_file = ','
+                        att_file = ','
                         for part in msgobj.walk():
                             content_disposition = part.get("Content-Disposition", None)
                             prog = re.compile('attachment')
@@ -352,7 +355,7 @@ class MailWindow(xbmcgui.WindowXML):
     dialog.close()
     if numEmails == 0:
         dialogOK = xbmcgui.Dialog()
-        dialogOK.ok("%s" % NOM ,Addon.getLocalizedString(id=612)) #no mail 
+        dialogOK.ok("%s" % self.NOM ,Addon.getLocalizedString(id=612)) #no mail 
         self.getControl( EMAIL_LIST ).reset()
     else:             #Inbox                           #You have                                           #emails
         dialog.create(Addon.getLocalizedString(id=613),Addon.getLocalizedString(id=615) + str(numEmails) + Addon.getLocalizedString(id=616))
@@ -513,6 +516,8 @@ class MailWindow(xbmcgui.WindowXML):
   def getImapMails(self):
     print "getImapMails"
     print "server %s, user %s, password %s, folder %s, port %s\n" % (self.SERVER, self.USER,self.PASSWORD, self.FOLDER, self.PORT)
+    dialog = xbmcgui.DialogProgress()
+    dialog.create(Addon.getLocalizedString(id=614), Addon.getLocalizedString(id=610))  #Inbox,  Logging in...
     #Mise a zero de la ListBox msg
     #self.getControl( EMAIL_LIST ).reset()
     self.emails = []
@@ -535,7 +540,7 @@ class MailWindow(xbmcgui.WindowXML):
         dialog.close()
         if numEmails == 0:
             dialogOK = xbmcgui.Dialog()
-            dialogOK.ok("%s" % NOM ,Addon.getLocalizedString(id=612)) #no mail 
+            dialogOK.ok("%s" % self.NOM ,Addon.getLocalizedString(id=612)) #no mail 
             self.getControl( EMAIL_LIST ).reset()
         else:             #Inbox                           #You have                                           #emails
             dialog.create(Addon.getLocalizedString(id=613),Addon.getLocalizedString(id=615) + str(numEmails) + Addon.getLocalizedString(id=616))
@@ -569,7 +574,7 @@ class MailWindow(xbmcgui.WindowXML):
                 #attachments = []
                 body = None
                 html = None
-                #att_file = ','
+                att_file = ','
                 for part in msgobj.walk():
                     content_disposition = part.get("Content-Disposition", None)
                     prog = re.compile('attachment')
