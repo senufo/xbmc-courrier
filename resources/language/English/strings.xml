@@ -16,7 +16,7 @@
     <string id="620">Problem connecting to server : %s</string> 
   <!-- Script Settings -->
 
-    <string id="30100">Settings</string>
+    <string id="30100">Server name</string>
     <string id="30101">Username</string>
     <string id="30102">Password</string>
     <string id="30103">Server</string>

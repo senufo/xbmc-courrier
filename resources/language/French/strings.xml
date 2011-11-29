@@ -14,10 +14,9 @@
     <string id="618">récupère le courrier</string>
     <string id="619">Attendez, SVP...</string>
     <string id="620">Problème de connection au serveur : %s</string> 
-
   <!-- Script Settings -->
 
-    <string id="30100">Paramètres</string>
+    <string id="30100">Nom du serveur</string>
     <string id="30101">Utilisateur</string>
     <string id="30102">Mot de passe</string>
     <string id="30103">Serveur</string>
