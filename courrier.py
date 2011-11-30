@@ -356,7 +356,7 @@ class MailWindow(xbmcgui.WindowXML):
 		    imap = imaplib.IMAP4_SSL(str(self.SERVER), int(self.PORT))
         else:
 		    imap = imaplib.IMAP4(str(self.SERVER), int(self.PORT))
-        att_file = ','
+        att_file = ':'
         imap.login(self.USER, self.PASSWORD)
         imap.select(self.FOLDER)
         #numEmails = len(imap.search(None, 'UnSeen')[1][0].split())
