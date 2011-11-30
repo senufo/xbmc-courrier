@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #Script pour consulter ses mails
 #Senufo, 2011 (c)
-#Version 0.0.7
+#Version 0.0.8
 #
 # $Date: 2011-11-13 22:23:30 +0100 (dim. 13 nov. 2011) $
 # $Author: Senufo $
@@ -209,8 +209,13 @@ class MailWindow(xbmcgui.WindowXML):
                 resp, text, octets = mail.top(id,300)
             att_file = ':'
             print "Ligne 384"
-
             text = string.join(text, "\n")
+            self.processMails(text, att_file)
+        progressDialog.close()
+        #Affiche le 1er mail de la liste
+        self.getControl( EMAIL_LIST ).selectItem(0)
+
+  def processMails(self, text, att_file):
             #print "TEXT = %s" % text
             myemail = email.message_from_string(text)
             p = EmailParser()
@@ -324,9 +329,9 @@ class MailWindow(xbmcgui.WindowXML):
             listitem.setProperty( "message", description )
             #listitem.setProperty( "att_file", att_file )
             self.getControl( EMAIL_LIST ).addItem( listitem )
-        progressDialog.close()
+        #progressDialog.close()
         #Affiche le 1er mail de la liste
-        self.getControl( EMAIL_LIST ).selectItem(0)
+        #self.getControl( EMAIL_LIST ).selectItem(0)
 
         #except Exception, e:
         #    print str( e )
@@ -350,11 +355,9 @@ class MailWindow(xbmcgui.WindowXML):
 		    imap = imaplib.IMAP4_SSL(str(self.SERVER), int(self.PORT))
         else:
 		    imap = imaplib.IMAP4(str(self.SERVER), int(self.PORT))
-        print "Ligne 524"
+        att_file = ','
         imap.login(self.USER, self.PASSWORD)
-        print "Ligne 528"
         imap.select(self.FOLDER)
-        print "Ligne 530"
         numEmails = len(imap.search(None, 'UnSeen')[1][0].split())
         print "You have", numEmails, "emails"
         #Affiche le nombre de msg
@@ -372,127 +375,16 @@ class MailWindow(xbmcgui.WindowXML):
             for num in data[0].split():
                 typ, data = imap.fetch(num, '(RFC822)')
                 text = data[0][1].strip()
-                #print "TEXT = %s" % text
-                myemail = email.message_from_string(text)
-                p = EmailParser()
-                msgobj = p.parsestr(text)
-                if msgobj['Subject'] is not None:
-                    decodefrag = decode_header(msgobj['Subject'])
-                    subj_fragments = []
-                    for s , enc in decodefrag:
-                        if enc:
-                            s = unicode(s , enc).encode('utf8','replace')
-                        subj_fragments.append(s)
-                    subject = ''.join(subj_fragments)
-                else:
-                    subject = None
-                if msgobj['Date'] is not None:
-                    date = msgobj['Date']
-                else:
-                    date = '--'
-                print "Sujet = %s " % subject
-                Sujet = subject
-                realname = parseaddr(msgobj.get('From'))[1]
-                #attachments = []
-                body = None
-                html = None
-                att_file = ','
-                for part in msgobj.walk():
-                    content_disposition = part.get("Content-Disposition", None)
-                    prog = re.compile('attachment')
-                    #Retrouve le nom des fichiers attaches
-                    if prog.search(str(content_disposition)):
-                        #print "content-disp = %s " % content_disposition
-                        file_att = str(content_disposition)
-                                
-                        pattern = Pattern(r"\"(.+)\"")
-                        att_file +=  str(pattern.findall(file_att))
-                        #print "FILE : %s " % att_file
-                    #else:
-                    #    print "2=> content-disp = %s " % content_disposition
-
-                    if part.get_content_type() == "text/plain":
-                        if body is None:
-                            body = ""
-                        try :
-                            #Si pas de charset défini
-                            if (part.get_content_charset() is None):
-                                body +=  part.get_payload(decode=True)
-                            else:
-                                body += unicode(
-                                    part.get_payload(decode=True),
-                                    part.get_content_charset(),
-                                    'replace'
-                                    ).encode('utf8','replace')
-                        except Exception ,e:
-                            print "UNICODE ERROR text/plain"
-                            print str(e)
-                            #print "Type body = %s " % type(body)
-                            #print "Type charset = %s " % type(part.get_content_charset())
-        	                #print "####> %s " % part.get_payload()
-                            body += "Erreur unicode"
-                            print "BODY = %s " % body
-                    elif part.get_content_type() == "text/html":
-                        if html is None:
-                            html = ""
-                        try :
-                            #print "Charset = %s " % part.get_content_charset()
-                            unicode_coded_entities_html = unicode(BeautifulStoneSoup(html,convertEntities=BeautifulStoneSoup.HTML_ENTITIES))
-                            #text = html2text.html2text(unicode_coded_entities_html)
-
-                            #html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('utf8','replace')
-                            #html += unicode(part.get_payload(decode=True),part.get_content_charset(),'replace').encode('ascii','replace')
-                            html += unicode_coded_entities_html
-                            html = html2text(html)
-                        except Exception ,e:
-                            print "UNICODE ERROR text/html"
-                            print str(e)
-                            #print "Sujet =%s " % subject
-                            #Correct malfomed tag  
-                            #html_raw = html.replace('<img','< img ',100)
-                            #html_raw = html_raw.replace('<IMG','< img ',100)
-                            #html_raw = html_raw.replace('<font','< font ',100)
-                            #html_raw = html_raw.replace('"?>','">',100)
-                            #print "HTML = %s " % html_raw
-                            #html = html2text(html_raw)
-
-                            #body += "Erreur unicode html"
-                            html += "Erreur unicode html"
-                            print "HTML = %s " % html
-                    realname = parseaddr(msgobj.get('From'))[1]
-                Sujet = subject 
-                description = ' '
-                if (body):
-                    description = str(body)
-                else:
-                    try:
-                        print "Type = %s " % type(html)
-                        html = html.encode('ascii','replace')
-                        description = str(html)
-                    except Exception ,e:
-                        print "Erreur html.encode"
-                        print str(e)
-		        #Nb de lignes du msg pour permettre le scroll text
-                self.nb_lignes = description.count("\n")
- 
-                listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
-                listitem.setProperty( "realname", realname )
-                date += att_file
-                print "DAT_FILE = %s " % date
-                print "Descriptio = %s " % description
-                listitem.setProperty( "date", date )   
-                listitem.setProperty( "message", description )
-                #listitem.setProperty( "att_file", att_file )
-                self.getControl( EMAIL_LIST ).addItem( listitem )
-            progressDialog.close()
-            #Affiche le 1er mail de la liste
-            self.getControl( EMAIL_LIST ).selectItem(0)
-            imap.logout
+                self.processMails(text, att_file)
+        progressDialog.close()
+        #Affiche le 1er mail de la liste
+        self.getControl( EMAIL_LIST ).selectItem(0)
+        imap.logout
     except Exception, e:
         print str( e )
         print 'IMAP exception'
- 
-
+        
+                
   def onAction(self, action):
         #print "ID Action %d" % action.getId()
         #print "Code Action %d" % action.getButtonCode()
