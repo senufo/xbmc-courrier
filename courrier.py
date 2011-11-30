@@ -2,8 +2,8 @@
 #Script pour consulter ses mails
 #Senufo, 2011 (c)
 #Version 0.0.8
-#
-# $Date: 2011-11-13 22:23:30 +0100 (dim. 13 nov. 2011) $
+# 
+# Date : mercredi 30 novembre 2011, 19:14:13 (UTC+0100)
 # $Author: Senufo $
 ##Modules xbmc
 import xbmc, xbmcgui
@@ -368,15 +368,24 @@ class MailWindow(xbmcgui.WindowXML):
             dialogOK.ok("%s" % self.NOM ,Addon.getLocalizedString(id=612)) #no mail 
             self.getControl( EMAIL_LIST ).reset()
         else:             #Inbox                           #You have                                           #emails
-            dialog.create(Addon.getLocalizedString(id=613),Addon.getLocalizedString(id=615) + str(numEmails) + Addon.getLocalizedString(id=616))
-            ##Retrieve list of mails
+            #dialog.create(Addon.getLocalizedString(id=613),Addon.getLocalizedString(id=615) + str(numEmails) + Addon.getLocalizedString(id=616))
+            #dialog.close()
+            progressDialog2 = xbmcgui.DialogProgress()
+                              #Message(s)                       #Get mail
+            progressDialog2.create(Addon.getLocalizedString(id=617), Addon.getLocalizedString(id=618))
+            i = 0
+       ##Retrieve list of mails
             typ, data = imap.search(None, 'UNSEEN')
-            dialog.close()
+            #dialog.close()
             for num in data[0].split():
+                i = i + 1
                 typ, data = imap.fetch(num, '(RFC822)')
+                up = (i*100)/numEmails    #Get mail                         Please wait
+                progressDialog2.update(up, Addon.getLocalizedString(id=618), Addon.getLocalizedString(id=619))
+                print "UP = %d " % up
                 text = data[0][1].strip()
                 self.processMails(text, att_file)
-        progressDialog.close()
+            progressDialog2.close()
         #Affiche le 1er mail de la liste
         self.getControl( EMAIL_LIST ).selectItem(0)
         imap.logout
