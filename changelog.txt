@@ -1,8 +1,16 @@
 0.0.1
 - initial commit
-0.1
+0.0.1
 - use a skin xml file for mail window
-0.2
+0.0.2
 - add quit button
-0.3
+0.0.3
 - add scroll for message body
+0.0.4
+- change skin WinMail.py
+0.0.6
+- First version with partial IMAP support
+0.0.7
+- Complete IMAP support
+0.0.8
+- Add filter seach parameter for IMAP

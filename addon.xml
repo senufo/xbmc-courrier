@@ -12,7 +12,18 @@
     <summary lang="en">mail Checker</summary>
     <summary lang="fr">Courrier</summary> 
     <description lang="en">View e-mails</description>
-    <description lang="fr">Voir son courrier</description>
+    <description lang="fr">
+xbmc-courrier is a script for read mail on POP or IMAP servers.
+
+Based on the script and the skin of gmailchecker
+
+Configure server in settings
+You can define the max size of messages and a filter to search messages in IMAP server
+You can scroll message text with FASTFORWARD (key f for the keyboard) and REWIND (key r)
+
+At the moment you view message only in text mode and html message are convert in text with Beautilfulsoup and html2text "Aaron Swartz (me@aaronsw.com)" modules.
+On bottom you have status line with date and attach file name of the selected message
+    </description>
     <platform>all</platform>
   </extension>
 </addon>
