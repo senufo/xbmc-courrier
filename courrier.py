@@ -81,6 +81,7 @@ SERVER3		= 1003
 QUIT		= 1004
 FILE_ATT	= 1005
 MAX_SIZE_MSG = int(Addon.getSetting( 'max_msg_size' ))
+SEARCH_PARAM = Addon.getSetting( 'search_param' )
 
 class MailWindow(xbmcgui.WindowXML):
    
@@ -358,7 +359,8 @@ class MailWindow(xbmcgui.WindowXML):
         att_file = ','
         imap.login(self.USER, self.PASSWORD)
         imap.select(self.FOLDER)
-        numEmails = len(imap.search(None, 'UnSeen')[1][0].split())
+        #numEmails = len(imap.search(None, 'UnSeen')[1][0].split())
+        numEmails = len(imap.search(None,SEARCH_PARAM )[1][0].split())
         print "You have", numEmails, "emails"
         #Affiche le nombre de msg
         self.getControl( NX_MAIL ).setLabel( '%d msg(s)' % numEmails )
@@ -375,7 +377,8 @@ class MailWindow(xbmcgui.WindowXML):
             progressDialog2.create(Addon.getLocalizedString(id=617), Addon.getLocalizedString(id=618))
             i = 0
        ##Retrieve list of mails
-            typ, data = imap.search(None, 'UNSEEN')
+            #typ, data = imap.search(None, 'UNSEEN')
+            typ, data = imap.search(None, SEARCH_PARAM)
             #dialog.close()
             for num in data[0].split():
                 i = i + 1
