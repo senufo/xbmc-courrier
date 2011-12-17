@@ -14,3 +14,6 @@
 - Complete IMAP support
 0.0.8
 - Add filter seach parameter for IMAP
+0.0.9
+- Cleanning code
+- Change name of skin file

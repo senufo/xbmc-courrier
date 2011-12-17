@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.mail"
        name="Mail "
-       version="0.0.8"
+       version="0.0.9"
        provider-name="Senufo">
   <requires>
     <import addon="xbmc.python" version="2.0"/>
@@ -23,6 +23,7 @@ You can scroll message text with FASTFORWARD (key f for the keyboard) and REWIND
 
 At the moment you view message only in text mode and html message are convert in text with Beautilfulsoup and html2text "Aaron Swartz (me@aaronsw.com)" modules.
 On bottom you have status line with date and attach file name of the selected message
+For IMAP server you can define in SKIN your folder and the flag use for select message
     </description>
     <platform>all</platform>
   </extension>

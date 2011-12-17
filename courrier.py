@@ -54,7 +54,6 @@ Addon = xbmcaddon.Addon('script.mail')
 #get actioncodes from keymap.xml/ keys.h
 ACTION_PREVIOUS_MENU = 10
 ACTION_SELECT_ITEM = 7
-#ACTION_PARENT_DIR = 9
 ACTION_MOVE_LEFT       =   1
 ACTION_MOVE_RIGHT      =   2
 ACTION_MOVE_UP         =   3
@@ -102,14 +101,14 @@ class MailWindow(xbmcgui.WindowXML):
             self.getControl( Button_Name ).setLabel( NOM )
         else:
             self.getControl( Button_Name ).setEnabled(False)
-    #self.checkEmail(Addon.getSetting( 'name1' ))
+    self.checkEmail(Addon.getSetting( 'name1' ))
 
 
 	   
 #Verifie les mails et affiche les sujets et expediteurs
 #Alias etant le nom du serveur POP ou IMAP
   def checkEmail(self, alias):
-    print 'ALIAS = %s ' % alias
+    #print 'ALIAS = %s ' % alias
     self.getControl( STATUS_LABEL ).setLabel( '%s ...' % alias )
 
     #Vide la liste des sudjet des messages
@@ -161,7 +160,7 @@ class MailWindow(xbmcgui.WindowXML):
                 dialog.close()
  
   def getPopMails(self):
-    print "getPopMails"
+    #print "getPopMails"
     dialog = xbmcgui.DialogProgress()
     dialog.create(Addon.getLocalizedString(id=614), Addon.getLocalizedString(id=610))  #Inbox,  Logging in...
     if self.SSL:
@@ -194,14 +193,11 @@ class MailWindow(xbmcgui.WindowXML):
         #Mise a zero de la ListBox msg
         self.getControl( EMAIL_LIST ).reset()
         self.emails = []
-        print "Ligne 369"
         for item in items:
-            print "Ligne 371"
             i = i + 1
             id, size = string.split(item)
             up = (i*100)/numEmails    #Get mail                         Please wait
             progressDialog.update(up, Addon.getLocalizedString(id=618), Addon.getLocalizedString(id=619))
-            print "Ligne 376"
 
             #Si dépasse la taille max on télécharge que 50 lignes
             if (MAX_SIZE_MSG == 0) or (size < MAX_SIZE_MSG):
@@ -209,7 +205,6 @@ class MailWindow(xbmcgui.WindowXML):
             else: 
                 resp, text, octets = mail.top(id,300)
             att_file = ':'
-            print "Ligne 384"
             text = string.join(text, "\n")
             self.processMails(text, att_file)
         progressDialog.close()
@@ -235,7 +230,7 @@ class MailWindow(xbmcgui.WindowXML):
                 date = msgobj['Date']
             else:
                 date = '--'
-            print "Sujet = %s " % subject
+            #print "Sujet = %s " % subject
             Sujet = subject
             realname = parseaddr(msgobj.get('From'))[1]
 
@@ -271,8 +266,8 @@ class MailWindow(xbmcgui.WindowXML):
                                 'replace'
                                 ).encode('utf8','replace')
                     except Exception ,e:
-                        print "UNICODE ERROR text/plain"
-                        print str(e)
+                        #print "UNICODE ERROR text/plain"
+                        #print str(e)
                         #print "Type body = %s " % type(body)
                         #print "Type charset = %s " % type(part.get_content_charset())
         	            #print "####> %s " % part.get_payload()
@@ -291,8 +286,8 @@ class MailWindow(xbmcgui.WindowXML):
                         html += unicode_coded_entities_html
                         html = html2text(html)
                     except Exception ,e:
-                        print "UNICODE ERROR text/html"
-                        print str(e)
+                        #print "UNICODE ERROR text/html"
+                        #print str(e)
                         #print "Sujet =%s " % subject
                         #Correct malfomed tag  
                         #html_raw = html.replace('<img','< img ',100)
@@ -304,7 +299,7 @@ class MailWindow(xbmcgui.WindowXML):
 
                         #body += "Erreur unicode html"
                         html += "Erreur unicode html"
-                        print "HTML = %s " % html
+                        #print "HTML = %s " % html
                 realname = parseaddr(msgobj.get('From'))[1]
             Sujet = subject 
             description = ' '
@@ -312,11 +307,11 @@ class MailWindow(xbmcgui.WindowXML):
                 description = str(body)
             else:
                 try:
-                    print "Type = %s " % type(html)
+                    #print "Type = %s " % type(html)
                     html = html.encode('ascii','replace')
                     description = str(html)
                 except Exception ,e:
-                    print "Erreur html.encode"
+                    #print "Erreur html.encode"
                     print str(e)
 		    #Nb de lignes du msg pour permettre le scroll text
             self.nb_lignes = description.count("\n")
@@ -324,26 +319,14 @@ class MailWindow(xbmcgui.WindowXML):
             listitem = xbmcgui.ListItem( label2=realname, label=Sujet) 
             listitem.setProperty( "realname", realname )
             date += att_file
-            print "DAT_FILE = %s " % date
-            print "Descriptio = %s " % description
             listitem.setProperty( "date", date )   
             listitem.setProperty( "message", description )
             #listitem.setProperty( "att_file", att_file )
             self.getControl( EMAIL_LIST ).addItem( listitem )
-        #progressDialog.close()
-        #Affiche le 1er mail de la liste
-        #self.getControl( EMAIL_LIST ).selectItem(0)
-
-        #except Exception, e:
-        #    print str( e )
-        #    dialog.close() #"Inbox"                         "Problem connecting to server : %s" 
-        #    dialog.create(Addon.getLocalizedString(id=614),Addon.getLocalizedString(id=620) % self.SERVER)
-        #    time.sleep(5)
-        #    dialog.close()
  
   def getImapMails(self):
-    print "getImapMails"
-    print "server %s, user %s, password %s, folder %s, port %s\n" % (self.SERVER, self.USER,self.PASSWORD, self.FOLDER, self.PORT)
+    #print "getImapMails"
+    #print "server %s, user %s, password %s, folder %s, port %s\n" % (self.SERVER, self.USER,self.PASSWORD, self.FOLDER, self.PORT)
     dialog = xbmcgui.DialogProgress()
     dialog.create(Addon.getLocalizedString(id=614), Addon.getLocalizedString(id=610))  #Inbox,  Logging in...
     #Mise a zero de la ListBox msg
@@ -351,7 +334,7 @@ class MailWindow(xbmcgui.WindowXML):
     self.emails = []
     try:
 	    #print "server %s, user %s, password %s, folder %s, port %s\n" % (self.server,self.user,self.password, self.folder, self.port)
-        print "server %s, user %s, password %s, folder %s, port %s\n" % (self.SERVER, self.USER,self.PASSWORD, self.FOLDER, self.PORT)
+        #print "server %s, user %s, password %s, folder %s, port %s\n" % (self.SERVER, self.USER,self.PASSWORD, self.FOLDER, self.PORT)
         if self.SSL:
 		    imap = imaplib.IMAP4_SSL(str(self.SERVER), int(self.PORT))
         else:
@@ -361,7 +344,7 @@ class MailWindow(xbmcgui.WindowXML):
         imap.select(self.FOLDER)
         #numEmails = len(imap.search(None, 'UnSeen')[1][0].split())
         numEmails = len(imap.search(None,SEARCH_PARAM )[1][0].split())
-        print "You have", numEmails, "emails"
+        #print "You have", numEmails, "emails"
         #Affiche le nombre de msg
         self.getControl( NX_MAIL ).setLabel( '%d msg(s)' % numEmails )
         dialog.close()
@@ -425,6 +408,6 @@ class MailWindow(xbmcgui.WindowXML):
         elif (controlId == QUIT):
             self.close()
 
-mydisplay = MailWindow( "WinCourrier.xml" , __cwd__, "Default")
+mydisplay = MailWindow( "script-mail-main.xml" , __cwd__, "Default")
 mydisplay .doModal()
 del mydisplay
