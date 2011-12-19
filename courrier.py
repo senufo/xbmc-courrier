@@ -48,8 +48,11 @@ import mimetypes
 
 #Script html2text.py dans resources/lib
 from html2text import *
-
-Addon = xbmcaddon.Addon('script.mail')
+#Utilise le fichier de configuration de service notfier si il existe
+try:
+    Addon = xbmcaddon.Addon('service.notifier')
+except:
+    Addon = xbmcaddon.Addon('script.mail')
 
 #get actioncodes from keymap.xml/ keys.h
 ACTION_PREVIOUS_MENU = 10
