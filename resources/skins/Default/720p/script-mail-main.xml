@@ -159,7 +159,7 @@
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
           <onup>1002</onup>
-          <ondown>1001</ondown>
+          <ondown>1004</ondown>
           <onleft>1004</onleft>
           <onright>120</onright>
        </control>
@@ -204,6 +204,7 @@
         <textcolor>white</textcolor>
 	<!-- <aligny>center</aligny> -->
         <align>left</align>
+	<autoscroll time="3000" delay="4000" repeat="5000">True</autoscroll>
         <label>$INFO[Container(120).ListItem.Property(message)]</label>
       </control>
       
