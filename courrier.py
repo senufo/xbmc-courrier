@@ -182,10 +182,7 @@ class MailWindow(xbmcgui.WindowXML):
     if numEmails == 0:
         dialogOK = xbmcgui.Dialog()
         #dialogOK.ok("==> %s" % self.NOM, Addon_traduc.getLocalizedString(id=612)) #no mail 
-        print "MSG = %s " % Addon_traduc.getLocalizedString(id=621)
-        print "MSG = %s " % Addon_traduc.getLocalizedString(id=612)
-        print "MSG = %s " % Addon_traduc.getLocalizedString(id=611)
-        dialogOK.ok("%s" % self.NOM, Addon_traduc.getLocalizedString(id=621)) #no mail 
+        dialogOK.ok("%s" % self.NOM, Addon_traduc.getLocalizedString(id=612)) #no mail 
         self.getControl( EMAIL_LIST ).reset()
     else:             #Inbox                           #You have                                           #emails
         dialog.create(Addon_traduc.getLocalizedString(id=613),Addon_traduc.getLocalizedString(id=615) + str(numEmails) + Addon_traduc.getLocalizedString(id=616))
@@ -358,7 +355,7 @@ class MailWindow(xbmcgui.WindowXML):
         dialog.close()
         if numEmails == 0:
             dialogOK = xbmcgui.Dialog()
-            dialogOK.ok("%s" % self.NOM ,Addon_traduc.getLocalizedString(id=621)) #no mail 
+            dialogOK.ok("%s" % self.NOM ,Addon_traduc.getLocalizedString(id=612)) #no mail 
             self.getControl( EMAIL_LIST ).reset()
         else:             #Inbox                           #You have                                           #emails
             #dialog.create(Addon_traduc.getLocalizedString(id=613),Addon_traduc.getLocalizedString(id=615) + str(numEmails) + Addon_traduc.getLocalizedString(id=616))

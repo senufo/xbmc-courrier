@@ -5,7 +5,7 @@
   
     <string id="610">Logging in...</string>
     <string id="611">(%s) New e-mail%s</string>
-    <!--    <string id="612">no mail</string> -->
+    <string id="612">no mail</string>
     <string id="613">Error Connecting to server</string>
     <string id="614">Inbox</string>
     <string id="615">You have</string>
@@ -14,7 +14,6 @@
     <string id="618">Fetch mail</string>
     <string id="619">Please wait</string>
     <string id="620">Problem connecting to server : %s</string> 
-    <string id="621">no mail</string>
   <!-- Script Settings -->
 
     <string id="30100">Server name</string>
