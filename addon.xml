@@ -19,7 +19,7 @@ Based on the script and the skin of gmailchecker
 
 Configure server in settings
 You can define the max size of messages and a filter to search messages in IMAP server
-You can scroll message text with FASTFORWARD (key f for the keyboard) and REWIND (key r)
+The text of your message scrolls automatically
 
 At the moment you view message only in text mode and html message are convert in text with Beautilfulsoup and html2text "Aaron Swartz (me@aaronsw.com)" modules.
 On bottom you have status line with date and attach file name of the selected message
