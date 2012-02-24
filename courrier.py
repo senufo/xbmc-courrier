@@ -18,7 +18,7 @@ __author__     = "Senufo"
 __scriptid__   = "script.mail"
 __scriptname__ = "Mail"
 
-__addon__      = xbmcaddon.Addon(id=__scriptid__)
+__addon__      = xbmcaddon.Addon(__scriptid__)
 
 __cwd__        = __addon__.getAddonInfo('path')
 __version__    = __addon__.getAddonInfo('version')
@@ -48,12 +48,13 @@ import mimetypes
 
 #Script html2text.py dans resources/lib
 from html2text import *
-#Utilise le fichier de configuration de service notfier si il existe
+#Utilise le fichier de configuration de service notifier si il existe
 try:
     Addon = xbmcaddon.Addon('service.notifier')
 except:
     Addon = xbmcaddon.Addon('script.mail')
-
+#Pour les messages traduit on utilise ceux de script.mail
+Addon_traduc = xbmcaddon.Addon('script.mail')
 #get actioncodes from keymap.xml/ keys.h
 ACTION_PREVIOUS_MENU = 10
 ACTION_SELECT_ITEM = 7
@@ -147,7 +148,7 @@ class MailWindow(xbmcgui.WindowXML):
             self.FOLDER = FOLDER
             #print "self.SERVER = %s " % self.SERVER
             #dialog = xbmcgui.DialogProgress()
-            #dialog.create(Addon.getLocalizedString(id=614), Addon.getLocalizedString(id=610))  #Inbox,  Logging in...
+            #dialog.create(Addon_traduc.getLocalizedString(id=614), Addon_traduc.getLocalizedString(id=610))  #Inbox,  Logging in...
             try:
                 #Partie POP3
                 if '0' in self.TYPE:  #'POP' 
@@ -158,14 +159,14 @@ class MailWindow(xbmcgui.WindowXML):
                 print str( e )
                 #dialog.close() #"Inbox"                         "Problem connecting to server : %s" 
                 dialog = xbmcgui.DialogProgress()
-                dialog.create(Addon.getLocalizedString(id=614),Addon.getLocalizedString(id=620) % self.SERVER)
+                dialog.create(Addon_traduc.getLocalizedString(id=614),Addon_traduc.getLocalizedString(id=620) % self.SERVER)
                 time.sleep(5)
                 dialog.close()
  
   def getPopMails(self):
     #print "getPopMails"
     dialog = xbmcgui.DialogProgress()
-    dialog.create(Addon.getLocalizedString(id=614), Addon.getLocalizedString(id=610))  #Inbox,  Logging in...
+    dialog.create(Addon_traduc.getLocalizedString(id=614), Addon_traduc.getLocalizedString(id=610))  #Inbox,  Logging in...
     if self.SSL:
         mail = poplib.POP3_SSL(str(self.SERVER),int(self.PORT))
     else:  #'POP3'
@@ -180,10 +181,14 @@ class MailWindow(xbmcgui.WindowXML):
     dialog.close()
     if numEmails == 0:
         dialogOK = xbmcgui.Dialog()
-        dialogOK.ok("%s" % self.NOM ,Addon.getLocalizedString(id=612)) #no mail 
+        #dialogOK.ok("==> %s" % self.NOM, Addon_traduc.getLocalizedString(id=612)) #no mail 
+        print "MSG = %s " % Addon_traduc.getLocalizedString(id=621)
+        print "MSG = %s " % Addon_traduc.getLocalizedString(id=612)
+        print "MSG = %s " % Addon_traduc.getLocalizedString(id=611)
+        dialogOK.ok("%s" % self.NOM, Addon_traduc.getLocalizedString(id=621)) #no mail 
         self.getControl( EMAIL_LIST ).reset()
     else:             #Inbox                           #You have                                           #emails
-        dialog.create(Addon.getLocalizedString(id=613),Addon.getLocalizedString(id=615) + str(numEmails) + Addon.getLocalizedString(id=616))
+        dialog.create(Addon_traduc.getLocalizedString(id=613),Addon_traduc.getLocalizedString(id=615) + str(numEmails) + Addon_traduc.getLocalizedString(id=616))
         ##Retrieve list of mails
         resp, items, octets = mail.list()
         print "resp %s, %s " % (resp, items)
@@ -191,7 +196,7 @@ class MailWindow(xbmcgui.WindowXML):
         #On recupere tous les messages pour les afficher
         progressDialog = xbmcgui.DialogProgress()
                               #Message(s)                       #Get mail
-        progressDialog.create(Addon.getLocalizedString(id=617), Addon.getLocalizedString(id=618))
+        progressDialog.create(Addon_traduc.getLocalizedString(id=617), Addon_traduc.getLocalizedString(id=618))
         i = 0
         #Mise a zero de la ListBox msg
         self.getControl( EMAIL_LIST ).reset()
@@ -200,7 +205,7 @@ class MailWindow(xbmcgui.WindowXML):
             i = i + 1
             id, size = string.split(item)
             up = (i*100)/numEmails    #Get mail                         Please wait
-            progressDialog.update(up, Addon.getLocalizedString(id=618), Addon.getLocalizedString(id=619))
+            progressDialog.update(up, Addon_traduc.getLocalizedString(id=618), Addon_traduc.getLocalizedString(id=619))
 
             #Si dépasse la taille max on télécharge que 50 lignes
             if (MAX_SIZE_MSG == 0) or (size < MAX_SIZE_MSG):
@@ -331,7 +336,7 @@ class MailWindow(xbmcgui.WindowXML):
     #print "getImapMails"
     #print "server %s, user %s, password %s, folder %s, port %s\n" % (self.SERVER, self.USER,self.PASSWORD, self.FOLDER, self.PORT)
     dialog = xbmcgui.DialogProgress()
-    dialog.create(Addon.getLocalizedString(id=614), Addon.getLocalizedString(id=610))  #Inbox,  Logging in...
+    dialog.create(Addon_traduc.getLocalizedString(id=614), Addon_traduc.getLocalizedString(id=610))  #Inbox,  Logging in...
     #Mise a zero de la ListBox msg
     #self.getControl( EMAIL_LIST ).reset()
     self.emails = []
@@ -353,14 +358,14 @@ class MailWindow(xbmcgui.WindowXML):
         dialog.close()
         if numEmails == 0:
             dialogOK = xbmcgui.Dialog()
-            dialogOK.ok("%s" % self.NOM ,Addon.getLocalizedString(id=612)) #no mail 
+            dialogOK.ok("%s" % self.NOM ,Addon_traduc.getLocalizedString(id=621)) #no mail 
             self.getControl( EMAIL_LIST ).reset()
         else:             #Inbox                           #You have                                           #emails
-            #dialog.create(Addon.getLocalizedString(id=613),Addon.getLocalizedString(id=615) + str(numEmails) + Addon.getLocalizedString(id=616))
+            #dialog.create(Addon_traduc.getLocalizedString(id=613),Addon_traduc.getLocalizedString(id=615) + str(numEmails) + Addon_traduc.getLocalizedString(id=616))
             #dialog.close()
             progressDialog2 = xbmcgui.DialogProgress()
                               #Message(s)                       #Get mail
-            progressDialog2.create(Addon.getLocalizedString(id=617), Addon.getLocalizedString(id=618))
+            progressDialog2.create(Addon_traduc.getLocalizedString(id=617), Addon_traduc.getLocalizedString(id=618))
             i = 0
        ##Retrieve list of mails
             #typ, data = imap.search(None, 'UNSEEN')
@@ -370,7 +375,7 @@ class MailWindow(xbmcgui.WindowXML):
                 i = i + 1
                 typ, data = imap.fetch(num, '(RFC822)')
                 up = (i*100)/numEmails    #Get mail                         Please wait
-                progressDialog2.update(up, Addon.getLocalizedString(id=618), Addon.getLocalizedString(id=619))
+                progressDialog2.update(up, Addon_traduc.getLocalizedString(id=618), Addon_traduc.getLocalizedString(id=619))
                 print "UP = %d " % up
                 text = data[0][1].strip()
                 self.processMails(text, att_file)
