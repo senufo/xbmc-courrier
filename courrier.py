@@ -331,7 +331,7 @@ class MailWindow(xbmcgui.WindowXML):
             imap.select(self.FOLDER)
             #numEmails = len(imap.search(None, 'UnSeen')[1][0].split())
             numEmails = len(imap.search(None, SEARCH_PARAM )[1][0].split())
-            #print "You have", numEmails, "emails"
+            #print "You have", numEmails, "emails IMAP"
             #Affiche le nombre de msg
             self.getControl( NX_MAIL ).setLabel( '%d msg(s)' % numEmails )
             dialog.close()

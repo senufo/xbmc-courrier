@@ -17,3 +17,9 @@
 0.0.9
 - Cleanning code
 - Change name of skin file
+0.1
+- Remove TODO file
+- Remove gmail icon file
+- Add Autoscroll text in xml skin file
+0.1.1
+- Fix bug in translate messages
