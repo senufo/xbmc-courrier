@@ -23,3 +23,6 @@
 - Add Autoscroll text in xml skin file
 0.1.1
 - Fix bug in translate messages
+0.1.2
+- Fix error when no config file with script.notifier
+- Remove TAB in code
