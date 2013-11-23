@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.mail"
        name="Mail "
-       version="0.1.1"
+       version="0.1.2"
        provider-name="Senufo">
   <requires>
     <import addon="xbmc.python" version="2.0"/>
@@ -10,12 +10,13 @@
              library="courrier.py" />
   <extension point="xbmc.addon.metadata">
     <summary lang="en">mail Checker</summary>
-    <summary lang="fr">Courrier</summary> 
+    <summary lang="fr">Courrier</summary>
     <description lang="en">View e-mails</description>
     <description lang="fr">
 xbmc-courrier is a script for read mail on POP or IMAP servers.
 
 Based on the script and the skin of gmailchecker
+it's not compatible with plugin mail (Tristan Fischer)
 
 Configure server in settings
 You can define the max size of messages and a filter to search messages in IMAP server
