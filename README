@@ -1,6 +1,7 @@
 xbmc-courrier is a script for read mail on POP or imap servers.
 
 Based on the script and the skin of gmailchecker
+No compatible with addons mail (Tristan Fischer)
 
 Configure server in settings
 You can define the max size of messages and a filter to search messages in IMAP server
