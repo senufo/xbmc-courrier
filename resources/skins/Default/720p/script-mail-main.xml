@@ -28,7 +28,7 @@
             <height>82</height>
             <texture>icon.png</texture>
         </control>
-             
+
 
 
       <control type="label" id="100">
@@ -43,7 +43,7 @@
         <align>center</align>
         <wrapmultiline>true</wrapmultiline>
       </control>
-      
+
       <control type="label" id="101">
         <description>textarea : Nx mail</description>
         <posx>1060</posx>
@@ -56,7 +56,7 @@
         <align>right</align>
         <label>(0) New e-mails</label>
       </control>
-     
+
       <control type="label">
         <description>textarea : Partie Update de Listitem (120) EMAIL_LIST, en bas</description>
         <posx>30</posx>
@@ -69,7 +69,7 @@
         <align>center</align>
         <label>$INFO[Container(120).ListItem.Property(date)]</label>
       </control>
-      
+
       <control type="image">
         <posx>20</posx>
         <posy>110</posy>
@@ -90,34 +90,36 @@
         <width>1200</width>
         <height>2</height>
         <texture>GMseparator.png</texture>
-      </control>      
+      </control>
       <control type="image">
         <posx>20</posx>
         <posy>665</posy>
         <width>1200</width>
         <height>2</height>
         <texture>GMseparator.png</texture>
-      </control> 
+      </control>
       <control type="image">
         <posx>20</posx>
         <posy>670</posy>
         <width>1200</width>
         <height>2</height>
         <texture>GMseparator.png</texture>
-      </control>      
+      </control>
       <!--- Boutons Serveurs MAIL -->
       <control type="button" id="1001">
           <description>Server button control</description>
           <posx>20</posx>
           <posy>126</posy>
           <width>135</width>
+          <textwidth>200</textwidth>
+          <align>center</align>
           <height>30</height>
           <visible>true</visible>
           <colordiffuse>FFFFFFFF</colordiffuse>
           <texturefocus>default-list-focus.png</texturefocus>
           <texturenofocus>default-list-nofocus.png</texturenofocus>
           <label></label>
-          <font>font14</font>
+          <font>Font_12</font>
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
           <onup>1003</onup>
@@ -130,13 +132,15 @@
           <posx>20</posx>
           <posy>166</posy>
           <width>135</width>
+          <textwidth>200</textwidth>
+          <align>center</align>
           <height>30</height>
           <visible>true</visible>
           <colordiffuse>FFFFFFFF</colordiffuse>
           <texturefocus>default-list-focus.png</texturefocus>
           <texturenofocus>default-list-nofocus.png</texturenofocus>
           <label></label>
-          <font>font14</font>
+          <font>Font_12</font>
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
           <onup>1001</onup>
@@ -149,13 +153,15 @@
           <posx>20</posx>
           <posy>206</posy>
           <width>135</width>
+          <textwidth>200</textwidth>
+          <align>center</align>
           <height>30</height>
           <visible>true</visible>
           <colordiffuse>FFFFFFFF</colordiffuse>
           <texturefocus>default-list-focus.png</texturefocus>
           <texturenofocus>default-list-nofocus.png</texturenofocus>
           <label></label>
-          <font>font14</font>
+          <font>Font_12</font>
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
           <onup>1002</onup>
@@ -169,13 +175,15 @@
           <posx>20</posx>
           <posy>256</posy>
           <width>135</width>
+          <textwidth>200</textwidth>
+          <align>center</align>
           <height>30</height>
           <visible>true</visible>
           <colordiffuse>FFFFFFFF</colordiffuse>
           <texturefocus>default-list-focus.png</texturefocus>
           <texturenofocus>default-list-nofocus.png</texturenofocus>
           <label>Quitter</label>
-          <font>font14</font>
+          <font>Font_12</font>
           <textcolor>FFFFFFFF</textcolor>
           <disabledcolor>80FFFFFF</disabledcolor>
           <onup>1003</onup>
@@ -192,7 +200,7 @@
         <height>2</height>
         <texture>GMseparator.png</texture>
       </control>
- 
+
        <!-- Texte du msg -->
        <control type="textbox" id="102">
         <description>textarea : Corps du mail</description>
@@ -207,7 +215,7 @@
 	<autoscroll time="3000" delay="4000" repeat="5000">True</autoscroll>
         <label>$INFO[Container(120).ListItem.Property(message)]</label>
       </control>
-      
+
 
       <!-- ** Required ** Do not change <id> or <type> -->
       <!-- Liste des messages                          -->
@@ -232,7 +240,7 @@
             <height>2</height>
             <texture border="10">default-list-nofocus.png</texture>
           </control>
-          
+
           <control type="label">
             <posx>10</posx> <!-- position de l'element non selectionne -->
             <posy>0</posy>
@@ -245,7 +253,7 @@
             <align>left</align>
             <info>ListItem.Label</info>
           </control>
-          
+
           <control type="label">
             <posx>500</posx> <!-- position de 2eme element non selectionne -->
             <posy>0</posy>
@@ -269,7 +277,7 @@
             <texture border="10">default-list-focus.png</texture>
             <visible>Control.HasFocus(120)</visible>
           </control>
-          
+
           <control type="label">
             <posx>10</posx>
             <posy>0</posy>
@@ -282,7 +290,7 @@
             <align>left</align>
             <info>ListItem.Label</info>
           </control>
-          
+
           <control type="label">
             <posx>500</posx>
             <posy>0</posy>
